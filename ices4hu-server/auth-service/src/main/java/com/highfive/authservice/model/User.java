@@ -2,9 +2,11 @@ package com.highfive.authservice.model;
 
 import java.io.Serializable;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @SuppressWarnings("serial")
@@ -90,4 +92,6 @@ public class User implements Serializable {
 		this.status = status;
 	}
 
+	@OneToOne(cascade = CascadeType.ALL)
+	private Student student;
 }
