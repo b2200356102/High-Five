@@ -1,12 +1,10 @@
-package com.highfive.authservice.model;
+package com.highfive.authservice.entity;
 
 import java.io.Serializable;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @SuppressWarnings("serial")
@@ -16,7 +14,7 @@ public class User implements Serializable {
 
 	@Id
 	@Column(name = "ID", nullable = false, unique = true)
-	private Long id;
+	private Integer id;
 
 	@Column(name = "NAME", nullable = false, length = 25)
 	private String name;
@@ -24,7 +22,7 @@ public class User implements Serializable {
 	@Column(name = "SURNAME", nullable = false, length = 25)
 	private String surname;
 
-	@Column(name = "MAIL", nullable = false, length = 20, unique = true)
+	@Column(name = "MAIL", nullable = false, length = 20)
 	private String mail;
 
 	@Column(name = "PASSWORD", nullable = false, length = 20)
@@ -36,11 +34,11 @@ public class User implements Serializable {
 	@Column(name = "status", nullable = false)
 	private Boolean status;
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -92,6 +90,4 @@ public class User implements Serializable {
 		this.status = status;
 	}
 
-	@OneToOne(cascade = CascadeType.ALL)
-	private Student student;
 }
