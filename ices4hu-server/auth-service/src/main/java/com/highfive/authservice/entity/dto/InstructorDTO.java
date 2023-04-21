@@ -1,5 +1,7 @@
 package com.highfive.authservice.entity.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
+
 public class InstructorDTO {
 
 	private Integer instructorId;
@@ -9,6 +11,7 @@ public class InstructorDTO {
 	private Double score;
 	private Boolean isDepartmentManager;
 
+	@QueryProjection
 	public InstructorDTO(Integer instructorId, UserDTO user, Integer departmentId,
 			String departmentName, Double score, Boolean isDepartmentManager) {
 		super();
