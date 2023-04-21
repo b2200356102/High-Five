@@ -19,7 +19,7 @@ public class Department {
 	@Column(name = "DEPARTMENT_MANAGER_ID")
 	private String departmentManagerId;
 
-	@Column(name = "NAME")
+	@Column(name = "NAME", nullable = false, length = 20)
 	private String name;
 
 	public Integer getId() {

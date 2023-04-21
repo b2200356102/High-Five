@@ -19,12 +19,6 @@ public class Admin {
 	@Column(name = "USER_ID", nullable = false, length = 10)
 	private String userId;
 
-	public Admin(Integer id, String userId) {
-		super();
-		this.id = id;
-		this.userId = userId;
-	}
-
 	public Integer getId() {
 		return id;
 	}

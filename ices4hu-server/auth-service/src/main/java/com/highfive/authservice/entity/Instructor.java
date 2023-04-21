@@ -23,7 +23,7 @@ public class Instructor {
 	private Integer departmentId;
 
 	@Column(name = "SCORE", nullable = false)
-	private Short score;
+	private Double score;
 
 	@Column(name = "IS_DEPARTMENT_MANAGER", nullable = false)
 	private Boolean isDepartmentManager;
@@ -52,11 +52,11 @@ public class Instructor {
 		this.departmentId = departmentId;
 	}
 
-	public Short getScore() {
+	public Double getScore() {
 		return score;
 	}
 
-	public void setScore(Short score) {
+	public void setScore(Double score) {
 		this.score = score;
 	}
 

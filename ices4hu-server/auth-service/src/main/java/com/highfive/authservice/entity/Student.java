@@ -4,12 +4,9 @@ import java.io.Serializable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @SuppressWarnings("serial")
@@ -25,9 +22,8 @@ public class Student implements Serializable {
 	@Column(name = "USER_ID", nullable = false, length = 10)
 	private String userId;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "ID")
-	private Department departmentId;
+	@Column(name = "DEPARTMENT_ID")
+	private Integer departmentId;
 
 	@Column(name = "SEMESTER")
 	private Short semester;
@@ -54,11 +50,11 @@ public class Student implements Serializable {
 		this.userId = userId;
 	}
 
-	public Department getDepartmentId() {
+	public Integer getDepartmentId() {
 		return departmentId;
 	}
 
-	public void setDepartmentId(Department departmentId) {
+	public void setDepartmentId(Integer departmentId) {
 		this.departmentId = departmentId;
 	}
 
