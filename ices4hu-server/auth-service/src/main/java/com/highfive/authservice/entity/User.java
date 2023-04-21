@@ -13,8 +13,8 @@ import jakarta.persistence.Table;
 public class User implements Serializable {
 
 	@Id
-	@Column(name = "ID", nullable = false, unique = true)
-	private Integer id;
+	@Column(name = "ID", nullable = false, unique = true, length = 10)
+	private String id;
 
 	@Column(name = "NAME", nullable = false, length = 25)
 	private String name;
@@ -31,14 +31,14 @@ public class User implements Serializable {
 	@Column(name = "ROLE", nullable = false)
 	private Short role;
 
-	@Column(name = "status", nullable = false)
-	private Boolean status;
+	@Column(name = "IS_PENDING", nullable = false)
+	private Boolean isPending;
 
-	public Integer getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -82,12 +82,12 @@ public class User implements Serializable {
 		this.role = role;
 	}
 
-	public Boolean getStatus() {
-		return status;
+	public Boolean getIsPending() {
+		return isPending;
 	}
 
-	public void setStatus(Boolean status) {
-		this.status = status;
+	public void setIsPending(Boolean isPending) {
+		this.isPending = isPending;
 	}
 
 }

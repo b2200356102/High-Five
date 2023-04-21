@@ -4,14 +4,14 @@ import com.querydsl.core.annotations.QueryProjection;
 
 public class UserDTO {
 
-	private Integer id;
+	private String id;
 	private String name;
 	private String surname;
 	private String mail;
 	private Short role;
 
 	@QueryProjection
-	public UserDTO(Integer id, String name, String surname, String mail, Short role) {
+	public UserDTO(String id, String name, String surname, String mail, Short role) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -20,11 +20,11 @@ public class UserDTO {
 		this.role = role;
 	}
 
-	public Integer getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
