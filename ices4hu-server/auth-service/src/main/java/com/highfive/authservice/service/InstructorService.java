@@ -1,9 +1,30 @@
 package com.highfive.authservice.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.highfive.authservice.entity.Instructor;
+import com.highfive.authservice.entity.User;
+import com.highfive.authservice.repository.InstructorRepository;
+import com.highfive.authservice.repository.UserRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class InstructorService {
+
+	@Autowired
+	private InstructorRepository repository;
+
+	@Autowired
+	private UserRepository userRepository;
+
+	@Transactional
+	public Instructor addInstructor(User user, Integer departmentId) {
+		userRepository.save(user);
+		Instructor newInstructor = new Instructor(null, user.getId(), departmentId, 100.0, false);
+		return repository.save(newInstructor);
+	}
 
 //	@Autowired
 //	UserService userService;
@@ -13,20 +34,11 @@ public class InstructorService {
 //	DepartmentService departmentService;
 //	QDepartment department = QDepartment.department;
 //
-//	@Autowired
-//	InstructorRepository repository;
 //	QInstructor instructor = QInstructor.ınstructor;
 //
 //	@PersistenceContext
 //	EntityManager em;
 //
-//	@Transactional
-//	public Instructor addInstructor(User user) {
-//		userService.createUser(user);
-//		// Instructor newInstructor = new Instructor(null, user.getId(), null, 100.0,
-//		// false);
-//		return null; // newInstructor;
-//	}
 //
 //	public List<Instructor> getInstructors() {
 //		return repository.findAll();

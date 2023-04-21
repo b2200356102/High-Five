@@ -1,16 +1,25 @@
 package com.highfive.authservice.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.highfive.authservice.repository.AdminRepository;
+import com.highfive.authservice.repository.UserRepository;
 
 @Service
 public class AdminService {
+
+	@Autowired
+	private AdminRepository repository;
+
+	@Autowired
+	private UserRepository userRepository;
 
 //	@Autowired
 //	UserService userService;
 //	QUser user = QUser.user;
 //
-//	@Autowired
-//	AdminRepository repository;
+
 //	QAdmin admin = QAdmin.admin;
 //
 //	@PersistenceContext

@@ -1,5 +1,7 @@
 package com.highfive.authservice.entity;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,9 +9,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "INSTRUCTOR", schema = "AUTH")
-public class Instructor {
+public class Instructor implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +30,16 @@ public class Instructor {
 
 	@Column(name = "IS_DEPARTMENT_MANAGER", nullable = false)
 	private Boolean isDepartmentManager;
+
+	public Instructor(Integer id, String userId, Integer departmentId, Double score,
+			Boolean isDepartmentManager) {
+		super();
+		this.id = id;
+		this.userId = userId;
+		this.departmentId = departmentId;
+		this.score = score;
+		this.isDepartmentManager = isDepartmentManager;
+	}
 
 	public Integer getId() {
 		return id;

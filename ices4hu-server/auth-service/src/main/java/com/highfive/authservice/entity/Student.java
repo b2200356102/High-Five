@@ -34,6 +34,17 @@ public class Student implements Serializable {
 	@Column(name = "IS_BANNED", nullable = false)
 	private Boolean isBanned;
 
+	public Student(Integer id, String userId, Integer departmentId, Short semester,
+			Boolean isUndergrad, Boolean isBanned) {
+		super();
+		this.id = id;
+		this.userId = userId;
+		this.departmentId = departmentId;
+		this.semester = semester;
+		this.isUndergrad = isUndergrad;
+		this.isBanned = isBanned;
+	}
+
 	public Integer getId() {
 		return id;
 	}

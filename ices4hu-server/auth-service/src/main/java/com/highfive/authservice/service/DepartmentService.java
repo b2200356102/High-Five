@@ -1,16 +1,28 @@
 package com.highfive.authservice.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.highfive.authservice.entity.Department;
+import com.highfive.authservice.entity.dto.DepartmentDTO;
+import com.highfive.authservice.repository.DepartmentRepository;
 
 @Service
 public class DepartmentService {
+
+	@Autowired
+	private DepartmentRepository repository;
+
+	public Department addDepartment(DepartmentDTO departmentDTO) {
+		Department department = new Department(departmentDTO.getDepartmentId(),
+				departmentDTO.getDepartmentManager().getUser().getId(), departmentDTO.getName());
+		return repository.save(department);
+	}
 
 //	@Autowired
 //	UserService userService;
 //	QUser user = QUser.user;
 //
-//	@Autowired
-//	DepartmentRepository repository;
 //	QDepartment department = QDepartment.department;
 //
 //	@PersistenceContext

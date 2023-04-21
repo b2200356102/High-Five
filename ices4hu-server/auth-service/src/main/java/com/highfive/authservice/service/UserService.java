@@ -1,20 +1,26 @@
 package com.highfive.authservice.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.highfive.authservice.entity.User;
+import com.highfive.authservice.repository.UserRepository;
 
 @Service
 public class UserService {
 
-//	@Autowired
-//	private UserRepository repository;
+	@Autowired
+	private UserRepository repository;
+
+	public User addUser(User userRequest) {
+		return repository.save(userRequest);
+	}
+
 //	private QUser user = QUser.user;
 //
 //	@PersistenceContext
 //	private EntityManager em;
 //
-//	public User createUser(User userRequest) {
-//		return repository.save(userRequest);
-//	}
 //
 //	public List<QUserDTO> getUsers() {
 //		JPAQuery<QUserDTO> query = new JPAQuery<>(em);
