@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.highfive.authservice.entity.User;
 import com.highfive.authservice.repository.UserRepository;
+import com.highfive.authservice.utils.exception.UserNotFoundException;
 
 @Service
 public class UserService {
@@ -12,8 +13,29 @@ public class UserService {
 	@Autowired
 	private UserRepository repository;
 
-	public User addUser(User userRequest) {
-		return repository.save(userRequest);
+	public User addUser(User user) {
+		return repository.save(user);
+	}
+
+	public User setUser(User user) throws UserNotFoundException {
+		User newUser = repository.findById(user.getId()).orElse(null);
+		if (newUser == null)
+			throw new UserNotFoundException();
+
+		if (user.getName() != null)
+			newUser.setName(user.getName());
+		if (user.getSurname() != null)
+			newUser.setSurname(user.getSurname());
+		if (user.getPassword() != null)
+			newUser.setPassword(user.getPassword());
+		if (user.getMail() != null)
+			newUser.setMail(user.getMail());
+		if (user.getRole() != null)
+			newUser.setRole(user.getRole());
+		if (user.getIsPending() != null)
+			newUser.setIsPending(user.getIsPending());
+
+		return repository.save(newUser);
 	}
 
 //	private QUser user = QUser.user;

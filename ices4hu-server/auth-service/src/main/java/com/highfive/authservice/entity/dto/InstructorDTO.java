@@ -1,24 +1,23 @@
 package com.highfive.authservice.entity.dto;
 
+import com.highfive.authservice.entity.User;
 import com.querydsl.core.annotations.QueryProjection;
 
 public class InstructorDTO {
 
 	private Integer instructorId;
-	private UserDTO user;
+	private User user;
 	private Integer departmentId;
-	private String departmentName;
 	private Double score;
 	private Boolean isDepartmentManager;
 
 	@QueryProjection
-	public InstructorDTO(Integer instructorId, UserDTO user, Integer departmentId,
-			String departmentName, Double score, Boolean isDepartmentManager) {
+	public InstructorDTO(Integer instructorId, User user, Integer departmentId,
+			Double score, Boolean isDepartmentManager) {
 		super();
 		this.instructorId = instructorId;
 		this.user = user;
 		this.departmentId = departmentId;
-		this.departmentName = departmentName;
 		this.score = score;
 		this.isDepartmentManager = isDepartmentManager;
 	}
@@ -31,11 +30,11 @@ public class InstructorDTO {
 		this.instructorId = instructorId;
 	}
 
-	public UserDTO getUser() {
+	public User getUser() {
 		return user;
 	}
 
-	public void setUser(UserDTO user) {
+	public void setUser(User user) {
 		this.user = user;
 	}
 
@@ -45,14 +44,6 @@ public class InstructorDTO {
 
 	public void setDepartmentId(Integer departmentId) {
 		this.departmentId = departmentId;
-	}
-
-	public String getDepartmentName() {
-		return departmentName;
-	}
-
-	public void setDepartmentName(String departmentName) {
-		this.departmentName = departmentName;
 	}
 
 	public Double getScore() {

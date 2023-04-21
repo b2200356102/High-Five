@@ -1,14 +1,15 @@
 package com.highfive.authservice.entity.dto;
 
+import com.highfive.authservice.entity.User;
 import com.querydsl.core.annotations.QueryProjection;
 
 public class AdminDTO {
 
 	private Integer adminId;
-	private UserDTO user;
+	private User user;
 
 	@QueryProjection
-	public AdminDTO(Integer adminId, UserDTO user) {
+	public AdminDTO(Integer adminId, User user) {
 		super();
 		this.adminId = adminId;
 		this.user = user;
@@ -22,11 +23,11 @@ public class AdminDTO {
 		this.adminId = adminId;
 	}
 
-	public UserDTO getUser() {
+	public User getUser() {
 		return user;
 	}
 
-	public void setUser(UserDTO user) {
+	public void setUser(User user) {
 		this.user = user;
 	}
 

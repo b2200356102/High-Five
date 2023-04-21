@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.highfive.authservice.entity.Department;
 import com.highfive.authservice.entity.dto.DepartmentDTO;
 import com.highfive.authservice.repository.DepartmentRepository;
+import com.highfive.authservice.utils.exception.DepartmentNotFoundException;
 
 @Service
 public class DepartmentService {
@@ -15,8 +16,25 @@ public class DepartmentService {
 
 	public Department addDepartment(DepartmentDTO departmentDTO) {
 		Department department = new Department(departmentDTO.getDepartmentId(),
-				departmentDTO.getDepartmentManager().getUser().getId(), departmentDTO.getName());
+				departmentDTO.getDepartmentManager().getUser().getId(),
+				departmentDTO.getName());
 		return repository.save(department);
+	}
+
+	public Department setDepartment(DepartmentDTO departmentDTO)
+			throws DepartmentNotFoundException {
+		Department newDepartment = repository.findById(departmentDTO.getDepartmentId())
+				.orElse(null);
+		if (newDepartment == null)
+			throw new DepartmentNotFoundException();
+
+		if (departmentDTO.getName() != null)
+			newDepartment.setName(departmentDTO.getName());
+		if (departmentDTO.getDepartmentManager() != null)
+			newDepartment.setDepartmentManagerId(
+					departmentDTO.getDepartmentManager().getUser().getId());
+
+		return repository.save(newDepartment);
 	}
 
 //	@Autowired
@@ -45,11 +63,6 @@ public class DepartmentService {
 //		return userService.getUserById(department.getDepartmentManagerId());
 //	}
 //
-//	public Department setDepartmentManager(Integer departmentId, String departmentManagerId) {
-//		Department department = repository.findById(departmentId).orElse(null);
-//		department.setDepartmentManagerId(departmentManagerId);
-//		return repository.save(department);
-//	}
 //
 //	public void deleteDepartment(Integer departmentId) {
 //		repository.deleteById(departmentId);

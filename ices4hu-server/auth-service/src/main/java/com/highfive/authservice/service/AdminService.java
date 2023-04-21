@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.highfive.authservice.repository.AdminRepository;
-import com.highfive.authservice.repository.UserRepository;
 
 @Service
 public class AdminService {
@@ -13,7 +12,7 @@ public class AdminService {
 	private AdminRepository repository;
 
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
 
 //	@Autowired
 //	UserService userService;
@@ -25,12 +24,6 @@ public class AdminService {
 //	@PersistenceContext
 //	EntityManager em;
 //
-//	@Transactional
-//	public Admin addAdmin(User user) {
-//		userService.createUser(user);
-//		// Admin newAdmin = new Admin(null, user.getId());
-//		return null; // repository.save(newAdmin);
-//	}
 //
 //	public List<Admin> getAdmins() {
 //		return repository.findAll();
