@@ -1,5 +1,7 @@
 package com.highfive.authservice.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +11,7 @@ import com.highfive.authservice.entity.QUser;
 import com.highfive.authservice.entity.User;
 import com.highfive.authservice.entity.dto.DepartmentDTO;
 import com.highfive.authservice.entity.dto.InstructorDTO;
+import com.highfive.authservice.entity.dto.QInstructorDTO;
 import com.highfive.authservice.repository.InstructorRepository;
 import com.highfive.authservice.utils.exception.DepartmentNotFoundException;
 import com.highfive.authservice.utils.exception.InstructorNotFoundException;
@@ -44,36 +47,63 @@ public class InstructorService {
 		return repository.save(newInstructor);
 	}
 
-	public Instructor getInstructor(Integer id) throws InstructorNotFoundException {
+	public List<Instructor> getInstructors() {
+		return repository.findAll();
+	}
+
+	public List<InstructorDTO> getInstructorDTOs() {
+		JPAQuery<InstructorDTO> query = new JPAQuery<>(em);
+		return query
+				.select(new QInstructorDTO(instructor.id, user, instructor.departmentId,
+						instructor.score, instructor.isDepartmentManager))
+				.from(instructor).innerJoin(user).on(instructor.userId.eq(user.id))
+				.fetch();
+	}
+
+	public Instructor getInstructorById(Integer id) throws InstructorNotFoundException {
 		Instructor instructor = repository.findById(id).orElse(null);
 		if (instructor == null)
 			throw new InstructorNotFoundException();
 		return instructor;
 	}
 
-	public InstructorDTO getInstructorDTO(String userId)
+	public InstructorDTO getInstructorDTOById(Integer id)
+			throws InstructorNotFoundException {
+		JPAQuery<InstructorDTO> query = new JPAQuery<>(em);
+		InstructorDTO instructorDTO = query
+				.select(new QInstructorDTO(instructor.id, user, instructor.departmentId,
+						instructor.score, instructor.isDepartmentManager))
+				.from(instructor).innerJoin(user).on(instructor.userId.eq(user.id))
+				.where(instructor.id.eq(id)).fetchFirst();
+		if (instructorDTO == null)
+			throw new InstructorNotFoundException();
+		return instructorDTO;
+	}
+
+	public Instructor getInstructorByUserId(String userId)
+			throws InstructorNotFoundException {
+		JPAQuery<Instructor> query = new JPAQuery<>(em);
+		Instructor instructorResponse = query.select(instructor).from(instructor)
+				.innerJoin(user).on(instructor.userId.eq(user.id).and(user.id.eq(userId)))
+				.fetchFirst();
+		if (instructorResponse == null)
+			throw new InstructorNotFoundException();
+		return instructorResponse;
+	}
+
+	public InstructorDTO getInstructorDTOByUserId(String userId)
 			throws InstructorNotFoundException, UserNotFoundException {
 		Instructor instructor = getInstructorByUserId(userId);
 		if (instructor == null)
 			throw new InstructorNotFoundException();
-		return new InstructorDTO(instructor.getId(), userService.getUser(userId),
-				instructor.getDepartmentId(), instructor.getScore(),
-				instructor.getIsDepartmentManager());
-	}
-
-	public Instructor getInstructorByUserId(String userId) {
-		JPAQuery<Instructor> query = new JPAQuery<>(em);
-		return query.select(instructor).from(instructor).innerJoin(user)
-				.on(instructor.userId.eq(user.id).and(user.id.eq(userId))).fetchFirst();
+		return getInstructorDTOById(instructor.getId());
 	}
 
 	@Transactional
 	public Instructor setInstructor(InstructorDTO instructorDTO)
-			throws UserNotFoundException, DepartmentNotFoundException {
-		Instructor newInstructor = repository.findById(instructorDTO.getInstructorId())
-				.orElse(null);
-		if (newInstructor == null)
-			throw new UserNotFoundException();
+			throws UserNotFoundException, InstructorNotFoundException,
+			DepartmentNotFoundException {
+		Instructor newInstructor = getInstructorByUserId(instructorDTO.getUser().getId());
 
 		userService.setUser(instructorDTO.getUser());
 
@@ -83,13 +113,14 @@ public class InstructorService {
 			if (instructorDTO.getIsDepartmentManager()) {
 				newInstructor
 						.setIsDepartmentManager(instructorDTO.getIsDepartmentManager());
-				Instructor oldDepartmentManager = getInstructorByUserId(
-						departmentService.getDepartment(newInstructor.getDepartmentId())
-								.getDepartmentManagerId());
+
+				Instructor oldDepartmentManager = getInstructorByUserId(departmentService
+						.getDepartmentById(newInstructor.getDepartmentId())
+						.getDepartmentManagerId());
 				InstructorDTO oldDepartmentManagerDTO = new InstructorDTO(
 						oldDepartmentManager.getId(),
-						userService.getUser(oldDepartmentManager.getUserId()), null, null,
-						false);
+						userService.getUserById(oldDepartmentManager.getUserId()), null,
+						null, false);
 				setInstructor(oldDepartmentManagerDTO);
 
 				DepartmentDTO departmentDTO = new DepartmentDTO(
@@ -107,29 +138,17 @@ public class InstructorService {
 		return repository.save(newInstructor);
 	}
 
-//	@Autowired
-//	UserService userService;
-//	QUser user = QUser.user;
-//
-//	@Autowired
-//	DepartmentService departmentService;
-//	QDepartment department = QDepartment.department;
-//
-//	QInstructor instructor = QInstructor.ınstructor;
-//
-//	@PersistenceContext
-//	EntityManager em;
-//
-//
-//	public List<Instructor> getInstructors() {
-//		return repository.findAll();
-//	}
-//
-//	public UserDTO getInstructor(String id) {
-//		JPAQuery<UserDTO> query = new JPAQuery<>(em);
-//		query.select(new QUserDTO(user.id, user.name, user.surname, user.mail, user.role))
-//				.from(user).innerJoin(instructor).on(user.id.eq(instructor.userId));
-//		return null;
-//	}
+	@Transactional
+	public void removeInstructorById(Integer id) throws InstructorNotFoundException {
+		repository.deleteById(id);
+		userService.removeUserById(getInstructorById(id).getUserId());
+	}
+
+	@Transactional
+	public void removeInstructorByUserId(String userId)
+			throws InstructorNotFoundException {
+		repository.deleteById(getInstructorByUserId(userId).getId());
+		userService.removeUserById(userId);
+	}
 
 }

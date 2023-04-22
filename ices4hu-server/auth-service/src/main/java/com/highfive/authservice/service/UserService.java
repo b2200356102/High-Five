@@ -1,5 +1,7 @@
 package com.highfive.authservice.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +19,11 @@ public class UserService {
 		return repository.save(user);
 	}
 
-	public User getUser(String id) throws UserNotFoundException {
+	public List<User> getUsers() {
+		return repository.findAll();
+	}
+
+	public User getUserById(String id) throws UserNotFoundException {
 		User user = repository.findById(id).orElse(null);
 		if (user == null)
 			throw new UserNotFoundException();
@@ -45,29 +51,7 @@ public class UserService {
 		return repository.save(newUser);
 	}
 
-//	private QUser user = QUser.user;
-//
-//	@PersistenceContext
-//	private EntityManager em;
-//
-//
-//	public List<QUserDTO> getUsers() {
-//		JPAQuery<QUserDTO> query = new JPAQuery<>(em);
-//		query.select(new QUserDTO(user.id, user.name, user.surname, user.mail, user.role)).from(user);
-//		return query.fetch();
-//	}
-//
-//	public UserDTO getUserById(String id) {
-//		JPAQuery<QUserDTO> query = new JPAQuery<>(em);
-//		UserDTO userDTO = query.select(new QUserDTO(user.id, user.name, user.surname, user.mail, user.role)).from(user)
-//				.where(user.id.eq(id)).fetchFirst();
-//		return userDTO;
-//	}
-//
-//	public Boolean checkUserPassword(String id, String password) {
-//		JPAQuery<String> query = new JPAQuery<>(em);
-//		String psw = query.select(user.password).from(user).where(user.id.eq(id)).fetchFirst();
-//		return psw.equals(password);
-//	}
-
+	public void removeUserById(String id) {
+		repository.deleteById(id);
+	}
 }

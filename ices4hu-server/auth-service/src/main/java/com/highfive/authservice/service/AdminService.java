@@ -70,13 +70,10 @@ public class AdminService {
 	}
 
 	public AdminDTO getAdminDTOByUserId(String userId) throws AdminNotFoundException {
-		JPAQuery<AdminDTO> query = new JPAQuery<>(em);
-		AdminDTO adminDTO = query.select(new QAdminDTO(admin.id, user)).from(admin)
-				.innerJoin(user).on(admin.userId.eq(user.id)).where(user.id.eq(userId))
-				.fetchFirst();
-		if (adminDTO == null)
+		Admin admin = getAdminByUserId(userId);
+		if (admin == null)
 			throw new AdminNotFoundException();
-		return adminDTO;
+		return getAdminDTOById(admin.getId());
 	}
 
 	public Admin setAdmin(AdminDTO adminDTO) throws UserNotFoundException {
@@ -84,26 +81,13 @@ public class AdminService {
 		return repository.save(new Admin(null, adminDTO.getUser().getId()));
 	}
 
-	public void deleteAdmin(Integer id) {
+	public void removeAdmin(Integer id) {
 		repository.deleteById(id);
 	}
 
-	public void deleteAdminByUserId(String userId) throws AdminNotFoundException {
+	public void removeAdminByUserId(String userId) throws AdminNotFoundException {
 		Admin admin = getAdminByUserId(userId);
 		repository.deleteById(admin.getId());
 	}
-
-//	public List<Admin> getAdmins() {
-//		return repository.findAll();
-//	}
-//
-//	public UserDTO deleteAdmin(String userId) {
-//
-//		JPAQuery<Integer> query = new JPAQuery<>(em);
-//		Integer id = query.select(admin.id).from(admin).where(admin.userId.eq(userId)).fetchFirst();
-//		repository.deleteById(id);
-//
-//		return userService.getUserById(userId);
-//	}
 
 }

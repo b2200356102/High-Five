@@ -1,5 +1,6 @@
 package com.highfive.authservice.entity.dto;
 
+import com.highfive.authservice.entity.Department;
 import com.highfive.authservice.entity.User;
 import com.querydsl.core.annotations.QueryProjection;
 
@@ -7,14 +8,14 @@ public class StudentDTO {
 
 	private Integer studentId;
 	private User user;
-	private DepartmentDTO department;
+	private Department department;
 	private Short semester;
 	private Boolean isUndergrad;
 	private Boolean isBanned;
 
 	@QueryProjection
-	public StudentDTO(Integer studentId, User user, DepartmentDTO department,
-			Short semester, Boolean isUndergrad, Boolean isBanned) {
+	public StudentDTO(Integer studentId, User user, Department department, Short semester,
+			Boolean isUndergrad, Boolean isBanned) {
 		super();
 		this.studentId = studentId;
 		this.user = user;
@@ -40,11 +41,11 @@ public class StudentDTO {
 		this.user = user;
 	}
 
-	public DepartmentDTO getDepartment() {
+	public Department getDepartment() {
 		return department;
 	}
 
-	public void setDepartment(DepartmentDTO department) {
+	public void setDepartment(Department department) {
 		this.department = department;
 	}
 
