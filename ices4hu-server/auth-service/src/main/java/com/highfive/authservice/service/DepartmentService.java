@@ -7,6 +7,8 @@ import com.highfive.authservice.entity.Department;
 import com.highfive.authservice.entity.dto.DepartmentDTO;
 import com.highfive.authservice.repository.DepartmentRepository;
 import com.highfive.authservice.utils.exception.DepartmentNotFoundException;
+import com.highfive.authservice.utils.exception.InstructorNotFoundException;
+import com.highfive.authservice.utils.exception.UserNotFoundException;
 
 @Service
 public class DepartmentService {
@@ -14,11 +16,31 @@ public class DepartmentService {
 	@Autowired
 	private DepartmentRepository repository;
 
+	@Autowired
+	private InstructorService instructorService;
+
 	public Department addDepartment(DepartmentDTO departmentDTO) {
 		Department department = new Department(departmentDTO.getDepartmentId(),
 				departmentDTO.getDepartmentManager().getUser().getId(),
 				departmentDTO.getName());
 		return repository.save(department);
+	}
+
+	public Department getDepartment(Integer id) throws DepartmentNotFoundException {
+		Department department = repository.findById(id).orElse(null);
+		if (department == null)
+			throw new DepartmentNotFoundException();
+		return department;
+	}
+
+	public DepartmentDTO getDepartmentDTO(Integer id) throws DepartmentNotFoundException,
+			InstructorNotFoundException, UserNotFoundException {
+		Department department = repository.findById(id).orElse(null);
+		if (department == null)
+			throw new DepartmentNotFoundException();
+		DepartmentDTO departmentDTO = new DepartmentDTO(id, department.getName(),
+				instructorService.getInstructorDTO(department.getDepartmentManagerId()));
+		return departmentDTO;
 	}
 
 	public Department setDepartment(DepartmentDTO departmentDTO)

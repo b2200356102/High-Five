@@ -17,6 +17,13 @@ public class UserService {
 		return repository.save(user);
 	}
 
+	public User getUser(String id) throws UserNotFoundException {
+		User user = repository.findById(id).orElse(null);
+		if (user == null)
+			throw new UserNotFoundException();
+		return user;
+	}
+
 	public User setUser(User user) throws UserNotFoundException {
 		User newUser = repository.findById(user.getId()).orElse(null);
 		if (newUser == null)
