@@ -31,6 +31,10 @@ public class Instructor implements Serializable {
 	@Column(name = "IS_DEPARTMENT_MANAGER", nullable = false)
 	private Boolean isDepartmentManager;
 
+	public Instructor() {
+		super();
+	}
+
 	public Instructor(Integer id, String userId, Integer departmentId, Double score,
 			Boolean isDepartmentManager) {
 		super();

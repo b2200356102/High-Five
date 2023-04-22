@@ -34,8 +34,12 @@ public class User implements Serializable {
 	@Column(name = "IS_PENDING", nullable = false)
 	private Boolean isPending;
 
-	public User(String id, String name, String surname, String mail, String password, Short role,
-			Boolean isPending) {
+	public User() {
+		super();
+	}
+
+	public User(String id, String name, String surname, String mail, String password,
+			Short role, Boolean isPending) {
 		super();
 		this.id = id;
 		this.name = name;

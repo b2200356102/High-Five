@@ -22,6 +22,10 @@ public class Admin implements Serializable {
 	@Column(name = "USER_ID", nullable = false, length = 10)
 	private String userId;
 
+	public Admin() {
+		super();
+	}
+
 	public Admin(Integer id, String userId) {
 		super();
 		this.id = id;

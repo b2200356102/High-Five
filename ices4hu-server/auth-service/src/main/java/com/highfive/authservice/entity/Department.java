@@ -25,6 +25,10 @@ public class Department implements Serializable {
 	@Column(name = "NAME", nullable = false, length = 20)
 	private String name;
 
+	public Department() {
+		super();
+	}
+
 	public Department(Integer id, String departmentManagerId, String name) {
 		super();
 		this.id = id;

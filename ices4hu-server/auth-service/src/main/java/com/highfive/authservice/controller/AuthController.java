@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.highfive.authservice.entity.Department;
@@ -55,14 +54,14 @@ public class AuthController {
 	}
 
 	@PostMapping("api/students/{departmentId}")
-	public CustomResponseEntity<Student> createStudent(@RequestParam User user,
+	public CustomResponseEntity<Student> createStudent(@RequestBody User user,
 			@PathVariable(name = "departmentId") Integer departmentId) {
 		return new CustomResponseEntity<>(studentService.addStudent(user, departmentId),
 				HttpStatus.OK);
 	}
 
 	@PostMapping("api/users/")
-	public CustomResponseEntity<User> createUser(User user) {
+	public CustomResponseEntity<User> createUser(@RequestBody User user) {
 		return new CustomResponseEntity<>(userService.addUser(user), HttpStatus.OK);
 	}
 }

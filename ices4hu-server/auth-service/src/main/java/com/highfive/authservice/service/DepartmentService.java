@@ -2,7 +2,10 @@ package com.highfive.authservice.service;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.highfive.authservice.entity.Department;
@@ -31,7 +34,8 @@ public class DepartmentService {
 	private DepartmentRepository repository;
 	private QDepartment department = QDepartment.department;
 
-	@Autowired
+	@Inject
+	@Lazy
 	private InstructorService instructorService;
 	private QInstructor instructor = QInstructor.instructor;
 
