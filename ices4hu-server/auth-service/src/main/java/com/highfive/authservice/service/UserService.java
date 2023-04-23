@@ -3,11 +3,14 @@ package com.highfive.authservice.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.highfive.authservice.entity.QUser;
 import com.highfive.authservice.entity.User;
 import com.highfive.authservice.repository.UserRepository;
+import com.highfive.authservice.utils.PasswordManager;
 import com.highfive.authservice.utils.exception.UserNotFoundException;
 
 import jakarta.persistence.EntityManager;
@@ -19,6 +22,9 @@ public class UserService {
 	@Autowired
 	private UserRepository repository;
 	private QUser user = QUser.user;
+
+	@Autowired
+	private JavaMailSender mailSender;
 
 	@PersistenceContext
 	private EntityManager em;
@@ -62,6 +68,20 @@ public class UserService {
 			newUser.setIsPending(user.getIsPending());
 
 		return repository.save(newUser);
+	}
+
+	public void setUserPassword(String id) throws UserNotFoundException {
+		User user = getUserById(id);
+		String newPassword = PasswordManager.generateNewPassword();
+		user.setPassword(newPassword);
+		repository.save(user);
+
+		SimpleMailMessage msg = new SimpleMailMessage();
+		msg.setFrom("test@gmail.com");
+		msg.setTo(user.getMail());
+		msg.setText("Your password has been changed to:\n" + newPassword);
+		msg.setSubject("Your password has been changed");
+		mailSender.send(msg);
 	}
 
 	public void removeUserById(String id) {

@@ -186,6 +186,14 @@ public class AuthController {
 		return new CustomResponseEntity<>(userService.setUser(user), HttpStatus.OK);
 	}
 
+	@PutMapping("api/psw/{userId}/")
+	public CustomResponseEntity<String> updateUserPassword(
+			@PathVariable(name = "userId") String userId) throws UserNotFoundException {
+
+		userService.setUserPassword(userId);
+		return new CustomResponseEntity<>("Password changed successfully", HttpStatus.OK);
+	}
+
 	@DeleteMapping("api/admins/{userId}")
 	public ResponseEntity<Object> deleteAdmin(
 			@PathVariable(name = "userId") String userId) throws AdminNotFoundException {
