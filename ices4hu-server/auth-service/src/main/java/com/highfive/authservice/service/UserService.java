@@ -5,15 +5,23 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.highfive.authservice.entity.QUser;
 import com.highfive.authservice.entity.User;
 import com.highfive.authservice.repository.UserRepository;
 import com.highfive.authservice.utils.exception.UserNotFoundException;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 @Service
 public class UserService {
 
 	@Autowired
 	private UserRepository repository;
+	private QUser user = QUser.user;
+
+	@PersistenceContext
+	private EntityManager em;
 
 	public User addUser(User user) {
 		return repository.save(user);
@@ -28,6 +36,11 @@ public class UserService {
 		if (user == null)
 			throw new UserNotFoundException();
 		return user;
+	}
+
+	public String getUserPasswordById(String id) throws UserNotFoundException {
+		User user = getUserById(id);
+		return user.getPassword();
 	}
 
 	public User setUser(User user) throws UserNotFoundException {
@@ -54,4 +67,5 @@ public class UserService {
 	public void removeUserById(String id) {
 		repository.deleteById(id);
 	}
+
 }
