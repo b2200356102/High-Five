@@ -2,12 +2,15 @@ package com.highfive.authservice.entity;
 
 import java.io.Serializable;
 
+import org.hibernate.validator.constraints.Length;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 @SuppressWarnings("serial")
 @Entity
@@ -23,6 +26,8 @@ public class Department implements Serializable {
 	private String departmentManagerId;
 
 	@Column(name = "NAME", nullable = false, length = 20)
+	@NotNull(message = "DEPARTMENT NAME CANNOT BE NULL")
+	@Length(max = 20, message = "DEPARTMENT NAME MUST BE LESS THAN 20 CHARACTERS")
 	private String name;
 
 	public Department() {

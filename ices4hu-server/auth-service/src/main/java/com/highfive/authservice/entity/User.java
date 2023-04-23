@@ -2,10 +2,14 @@ package com.highfive.authservice.entity;
 
 import java.io.Serializable;
 
+import org.hibernate.validator.constraints.Length;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 
 @SuppressWarnings("serial")
 @Entity
@@ -14,18 +18,25 @@ public class User implements Serializable {
 
 	@Id
 	@Column(name = "ID", nullable = false, unique = true, length = 10)
+	@Length(min = 10, max = 10, message = "USER ID MUST BE 10 CHARACTERS")
 	private String id;
 
 	@Column(name = "NAME", nullable = false, length = 25)
+	@NotNull(message = "USER NAME CANNOT BE NULL")
+	@Length(max = 25, message = "USER NAME MUST BE LESS THAN 25 CHARACTERS")
 	private String name;
 
 	@Column(name = "SURNAME", nullable = false, length = 25)
+	@NotNull(message = "USER SURNAME CANNOT BE NULL")
+	@Length(max = 25, message = "USER SURNAME MUST BE LESS THAN 25 CHARACTERS")
 	private String surname;
 
 	@Column(name = "MAIL", nullable = false, length = 20)
+	@Email(message = "INVALID MAIL ADDRESS")
 	private String mail;
 
 	@Column(name = "PASSWORD", nullable = false, length = 20)
+	@Length(min = 10, max = 20, message = "USER ID MUST BE BETWEEN 10-20 CHARACTERS")
 	private String password;
 
 	@Column(name = "ROLE", nullable = false)

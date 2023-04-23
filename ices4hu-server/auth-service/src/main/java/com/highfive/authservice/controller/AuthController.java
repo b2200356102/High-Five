@@ -34,6 +34,8 @@ import com.highfive.authservice.utils.exception.InstructorNotFoundException;
 import com.highfive.authservice.utils.exception.StudentNotFoundException;
 import com.highfive.authservice.utils.exception.UserNotFoundException;
 
+import jakarta.validation.Valid;
+
 @RestController
 @EnableTransactionManagement
 public class AuthController {
@@ -61,21 +63,22 @@ public class AuthController {
 	}
 
 	@PostMapping("api/instructors/{departmentId}/")
-	public CustomResponseEntity<Instructor> createInstructor(@RequestBody User user,
+	public CustomResponseEntity<Instructor> createInstructor(
+			@RequestBody @Valid User user,
 			@PathVariable(name = "departmentId") Integer departmentId) {
 		return new CustomResponseEntity<>(
 				instructorService.addInstructor(user, departmentId), HttpStatus.OK);
 	}
 
 	@PostMapping("api/students/{departmentId}/")
-	public CustomResponseEntity<Student> createStudent(@RequestBody User user,
+	public CustomResponseEntity<Student> createStudent(@RequestBody @Valid User user,
 			@PathVariable(name = "departmentId") Integer departmentId) {
 		return new CustomResponseEntity<>(studentService.addStudent(user, departmentId),
 				HttpStatus.OK);
 	}
 
 	@PostMapping("api/users/")
-	public CustomResponseEntity<User> createUser(@RequestBody User user) {
+	public CustomResponseEntity<User> createUser(@RequestBody @Valid User user) {
 		return new CustomResponseEntity<>(userService.addUser(user), HttpStatus.OK);
 	}
 
@@ -193,7 +196,8 @@ public class AuthController {
 	@DeleteMapping("api/departments/{departmentId}/")
 	public ResponseEntity<Object> deleteDepartment(
 			@PathVariable(name = "departmentId") Integer departmentId)
-			throws StudentNotFoundException, InstructorNotFoundException {
+			throws StudentNotFoundException, InstructorNotFoundException,
+			DepartmentNotFoundException {
 		departmentService.removeDepartment(departmentId);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -201,7 +205,7 @@ public class AuthController {
 	@DeleteMapping("api/instructors/{userId}")
 	public ResponseEntity<Object> deleteInstructor(
 			@PathVariable(name = "userId") String userId)
-			throws InstructorNotFoundException {
+			throws InstructorNotFoundException, DepartmentNotFoundException {
 		instructorService.removeInstructorByUserId(userId);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

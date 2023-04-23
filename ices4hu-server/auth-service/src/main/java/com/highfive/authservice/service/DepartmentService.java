@@ -100,8 +100,8 @@ public class DepartmentService {
 	}
 
 	@Transactional
-	public void removeDepartment(Integer id)
-			throws StudentNotFoundException, InstructorNotFoundException {
+	public void removeDepartment(Integer id) throws StudentNotFoundException,
+			InstructorNotFoundException, DepartmentNotFoundException {
 		JPAQuery<Student> studentQuery = new JPAQuery<>(em);
 		List<Student> students = studentQuery.select(student).from(student)
 				.innerJoin(department).on(student.departmentId.eq(department.id))

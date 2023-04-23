@@ -2,6 +2,8 @@ package com.highfive.authservice.entity;
 
 import java.io.Serializable;
 
+import org.hibernate.validator.constraints.Length;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,6 +22,7 @@ public class Student implements Serializable {
 	private Integer id;
 
 	@Column(name = "USER_ID", nullable = false, length = 10)
+	@Length(min = 10, max = 10, message = "USER ID MUST BE 10 CHARACTERS")
 	private String userId;
 
 	@Column(name = "DEPARTMENT_ID")

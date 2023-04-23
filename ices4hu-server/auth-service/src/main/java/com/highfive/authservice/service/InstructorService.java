@@ -129,6 +129,9 @@ public class InstructorService {
 			} else {
 				newInstructor
 						.setIsDepartmentManager(instructorDTO.getIsDepartmentManager());
+				DepartmentDTO departmentDTO = new DepartmentDTO(
+						instructorDTO.getDepartmentId(), null, null);
+				departmentService.setDepartment(departmentDTO);
 			}
 		}
 
@@ -139,14 +142,27 @@ public class InstructorService {
 	}
 
 	@Transactional
-	public void removeInstructorById(Integer id) throws InstructorNotFoundException {
+	public void removeInstructorById(Integer id)
+			throws InstructorNotFoundException, DepartmentNotFoundException {
+		Instructor instructor = getInstructorById(id);
+		if (instructor.getIsDepartmentManager()) {
+			DepartmentDTO departmentDTO = new DepartmentDTO(instructor.getDepartmentId(),
+					null, null);
+			departmentService.setDepartment(departmentDTO);
+		}
 		repository.deleteById(id);
 		userService.removeUserById(getInstructorById(id).getUserId());
 	}
 
 	@Transactional
 	public void removeInstructorByUserId(String userId)
-			throws InstructorNotFoundException {
+			throws InstructorNotFoundException, DepartmentNotFoundException {
+		Instructor instructor = getInstructorByUserId(userId);
+		if (instructor.getIsDepartmentManager()) {
+			DepartmentDTO departmentDTO = new DepartmentDTO(instructor.getDepartmentId(),
+					null, null);
+			departmentService.setDepartment(departmentDTO);
+		}
 		repository.deleteById(getInstructorByUserId(userId).getId());
 		userService.removeUserById(userId);
 	}

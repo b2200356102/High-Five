@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 @SuppressWarnings("serial")
 @Entity
@@ -20,6 +21,7 @@ public class Admin implements Serializable {
 	private Integer id;
 
 	@Column(name = "USER_ID", nullable = false, length = 10)
+	@NotNull(message = "USER ID CANNOT BE NULL")
 	private String userId;
 
 	public Admin() {
