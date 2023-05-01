@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.highfive.authservice.entity.dto.UserDTO;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -21,15 +23,10 @@ public class User implements Serializable {
 	@Length(min = 10, max = 10, message = "USER ID MUST BE 10 CHARACTERS")
 	private String id;
 
-	@Column(name = "NAME", nullable = false, length = 25)
+	@Column(name = "NAME", nullable = false, length = 50)
 	@NotNull(message = "USER NAME CANNOT BE NULL")
-	@Length(max = 25, message = "USER NAME MUST BE LESS THAN 25 CHARACTERS")
+	@Length(max = 50, message = "USER NAME MUST BE LESS THAN 50 CHARACTERS")
 	private String name;
-
-	@Column(name = "SURNAME", nullable = false, length = 25)
-	@NotNull(message = "USER SURNAME CANNOT BE NULL")
-	@Length(max = 25, message = "USER SURNAME MUST BE LESS THAN 25 CHARACTERS")
-	private String surname;
 
 	@Column(name = "MAIL", nullable = false, length = 20)
 	@Email(message = "INVALID MAIL ADDRESS")
@@ -39,26 +36,20 @@ public class User implements Serializable {
 	@Length(min = 10, max = 20, message = "USER ID MUST BE BETWEEN 10-20 CHARACTERS")
 	private String password;
 
-	@Column(name = "ROLE", nullable = false)
-	private Short role;
-
-	@Column(name = "IS_PENDING", nullable = false)
-	private Boolean isPending;
+	@Column(name = "PENDING", nullable = false)
+	private Boolean pending;
 
 	public User() {
 		super();
 	}
 
-	public User(String id, String name, String surname, String mail, String password,
-			Short role, Boolean isPending) {
+	public User(String id, String name, String mail, String password, Boolean pending) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.surname = surname;
 		this.mail = mail;
 		this.password = password;
-		this.role = role;
-		this.isPending = isPending;
+		this.pending = pending;
 	}
 
 	public String getId() {
@@ -77,14 +68,6 @@ public class User implements Serializable {
 		this.name = name;
 	}
 
-	public String getSurname() {
-		return surname;
-	}
-
-	public void setSurname(String surname) {
-		this.surname = surname;
-	}
-
 	public String getMail() {
 		return mail;
 	}
@@ -101,20 +84,15 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
-	public Short getRole() {
-		return role;
+	public Boolean getPending() {
+		return pending;
 	}
 
-	public void setRole(Short role) {
-		this.role = role;
+	public void setPending(Boolean pending) {
+		this.pending = pending;
 	}
 
-	public Boolean getIsPending() {
-		return isPending;
+	public UserDTO toUserDTO() {
+		return new UserDTO(id, name, mail, pending);
 	}
-
-	public void setIsPending(Boolean isPending) {
-		this.isPending = isPending;
-	}
-
 }

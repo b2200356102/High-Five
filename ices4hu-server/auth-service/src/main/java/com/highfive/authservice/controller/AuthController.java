@@ -15,14 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.highfive.authservice.entity.Admin;
 import com.highfive.authservice.entity.Department;
+import com.highfive.authservice.entity.DepartmentManager;
 import com.highfive.authservice.entity.Instructor;
 import com.highfive.authservice.entity.Student;
 import com.highfive.authservice.entity.User;
-import com.highfive.authservice.entity.dto.AdminDTO;
-import com.highfive.authservice.entity.dto.DepartmentDTO;
 import com.highfive.authservice.entity.dto.InstructorDTO;
 import com.highfive.authservice.entity.dto.StudentDTO;
+import com.highfive.authservice.entity.dto.UserDTO;
 import com.highfive.authservice.service.AdminService;
+import com.highfive.authservice.service.DepartmentManagerService;
 import com.highfive.authservice.service.DepartmentService;
 import com.highfive.authservice.service.InstructorService;
 import com.highfive.authservice.service.StudentService;
@@ -47,6 +48,9 @@ public class AuthController {
 	DepartmentService departmentService;
 
 	@Autowired
+	DepartmentManagerService departmentManagerService;
+
+	@Autowired
 	InstructorService instructorService;
 
 	@Autowired
@@ -55,10 +59,24 @@ public class AuthController {
 	@Autowired
 	UserService userService;
 
+	@PostMapping("api/admins/")
+	public CustomResponseEntity<Admin> updateAdmin(@RequestBody User user)
+			throws UserNotFoundException {
+		return new CustomResponseEntity<>(adminService.addAdmin(user), HttpStatus.OK);
+	}
+
 	@PostMapping("api/departments/")
 	public CustomResponseEntity<Department> createDepartment(
-			@RequestBody DepartmentDTO departmentDTO) {
-		return new CustomResponseEntity<>(departmentService.addDepartment(departmentDTO),
+			@RequestBody Department department) {
+		return new CustomResponseEntity<>(departmentService.addDepartment(department),
+				HttpStatus.OK);
+	}
+
+	@PostMapping("api/department_managers/")
+	public CustomResponseEntity<DepartmentManager> createDepartmentManager(
+			@RequestBody DepartmentManager departmentManager) {
+		return new CustomResponseEntity<>(
+				departmentManagerService.addDepartmentManager(departmentManager),
 				HttpStatus.OK);
 	}
 
@@ -88,9 +106,9 @@ public class AuthController {
 			throws AdminNotFoundException {
 
 		if (userId == null)
-			return new CustomResponseEntity<>(adminService.getAdminDTOs(), HttpStatus.OK);
+			return new CustomResponseEntity<>(adminService.getAdmins(), HttpStatus.OK);
 		else
-			return new CustomResponseEntity<>(adminService.getAdminByUserId(userId),
+			return new CustomResponseEntity<>(adminService.getAdminById(userId),
 					HttpStatus.OK);
 	}
 
@@ -100,36 +118,51 @@ public class AuthController {
 			throws DepartmentNotFoundException {
 
 		if (departmentId == null)
-			return new CustomResponseEntity<>(departmentService.getDepartmentDTOs(),
+			return new CustomResponseEntity<>(departmentService.getDepartments(),
 					HttpStatus.OK);
 		else
 			return new CustomResponseEntity<>(
 					departmentService.getDepartmentById(departmentId), HttpStatus.OK);
 	}
 
+	@GetMapping("api/department_managers/")
+	public CustomResponseEntity<Object> readDepartmentManagers(
+			@RequestParam(name = "departmentId", required = false) Integer departmentId)
+			throws DepartmentNotFoundException {
+
+		if (departmentId == null)
+			return new CustomResponseEntity<>(
+					departmentManagerService.getDepartmentManagers(), HttpStatus.OK);
+		else
+			return new CustomResponseEntity<>(departmentManagerService
+					.getDepartmentManagerByDepartmentId(departmentId), HttpStatus.OK);
+	}
+
 	@GetMapping("api/instructors/")
 	public CustomResponseEntity<Object> readInstructors(
 			@RequestParam(name = "userId", required = false) String userId)
-			throws InstructorNotFoundException, UserNotFoundException {
+			throws InstructorNotFoundException, UserNotFoundException,
+			DepartmentNotFoundException {
 
 		if (userId == null)
 			return new CustomResponseEntity<>(instructorService.getInstructorDTOs(),
 					HttpStatus.OK);
 		else
 			return new CustomResponseEntity<>(
-					instructorService.getInstructorDTOByUserId(userId), HttpStatus.OK);
+					instructorService.getInstructorDTOById(userId), HttpStatus.OK);
 	}
 
 	@GetMapping("api/students/")
 	public CustomResponseEntity<Object> readStudents(
 			@RequestParam(name = "userId", required = false) String userId)
-			throws StudentNotFoundException, UserNotFoundException {
+			throws StudentNotFoundException, UserNotFoundException,
+			DepartmentNotFoundException {
 
 		if (userId == null)
 			return new CustomResponseEntity<>(studentService.getStudentDTOs(),
 					HttpStatus.OK);
 		else
-			return new CustomResponseEntity<>(studentService.getStudentByUserId(userId),
+			return new CustomResponseEntity<>(studentService.getStudentDTOById(userId),
 					HttpStatus.OK);
 	}
 
@@ -139,9 +172,9 @@ public class AuthController {
 			throws UserNotFoundException {
 
 		if (userId == null)
-			return new CustomResponseEntity<>(userService.getUsers(), HttpStatus.OK);
+			return new CustomResponseEntity<>(userService.getUserDTOs(), HttpStatus.OK);
 		else
-			return new CustomResponseEntity<>(userService.getUserById(userId),
+			return new CustomResponseEntity<>(userService.getUserDTOById(userId),
 					HttpStatus.OK);
 	}
 
@@ -152,16 +185,20 @@ public class AuthController {
 				HttpStatus.OK);
 	}
 
-	@PutMapping("api/admins/")
-	public CustomResponseEntity<Admin> updateAdmin(@RequestBody AdminDTO adminDTO)
-			throws UserNotFoundException {
-		return new CustomResponseEntity<>(adminService.setAdmin(adminDTO), HttpStatus.OK);
-	}
-
 	@PutMapping("api/departments/")
 	public CustomResponseEntity<Department> updateDepartment(
-			@RequestBody DepartmentDTO departmentDTO) throws DepartmentNotFoundException {
-		return new CustomResponseEntity<>(departmentService.setDepartment(departmentDTO),
+			@RequestBody Department department) throws DepartmentNotFoundException {
+		return new CustomResponseEntity<>(departmentService.setDepartment(department),
+				HttpStatus.OK);
+	}
+
+	@PutMapping("api/department_managers/")
+	public CustomResponseEntity<DepartmentManager> updateDepartmentManager(
+			@RequestParam(name = "departmentId") Integer departmentId,
+			@RequestParam(name = "instructorId") String instructorId)
+			throws DepartmentNotFoundException {
+		return new CustomResponseEntity<>(
+				departmentManagerService.setDepartmentManager(departmentId, instructorId),
 				HttpStatus.OK);
 	}
 
@@ -181,7 +218,7 @@ public class AuthController {
 	}
 
 	@PutMapping("api/users/")
-	public CustomResponseEntity<User> updateUser(@RequestBody User user)
+	public CustomResponseEntity<User> updateUser(@RequestBody UserDTO user)
 			throws UserNotFoundException {
 		return new CustomResponseEntity<>(userService.setUser(user), HttpStatus.OK);
 	}
@@ -197,7 +234,7 @@ public class AuthController {
 	@DeleteMapping("api/admins/{userId}")
 	public ResponseEntity<Object> deleteAdmin(
 			@PathVariable(name = "userId") String userId) throws AdminNotFoundException {
-		adminService.removeAdminByUserId(userId);
+		adminService.removeAdmin(userId);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
@@ -210,11 +247,18 @@ public class AuthController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
+	@DeleteMapping("api/department_managers/{instructorId}/")
+	public ResponseEntity<Object> deleteDepartmentManager(
+			@PathVariable(name = "instructorId") String instructorId) {
+		departmentManagerService.removeDepartmentManager(instructorId);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
 	@DeleteMapping("api/instructors/{userId}")
 	public ResponseEntity<Object> deleteInstructor(
 			@PathVariable(name = "userId") String userId)
 			throws InstructorNotFoundException, DepartmentNotFoundException {
-		instructorService.removeInstructorByUserId(userId);
+		instructorService.removeInstructorById(userId);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
@@ -222,7 +266,7 @@ public class AuthController {
 	public ResponseEntity<Object> deleteStudent(
 			@PathVariable(name = "userId") String userId)
 			throws StudentNotFoundException {
-		studentService.removeStudentByUserId(userId);
+		studentService.removeStudentById(userId);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 

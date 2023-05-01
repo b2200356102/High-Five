@@ -1,44 +1,33 @@
 package com.highfive.authservice.entity.dto;
 
 import com.highfive.authservice.entity.Department;
-import com.highfive.authservice.entity.User;
 import com.querydsl.core.annotations.QueryProjection;
 
 public class StudentDTO {
 
-	private Integer studentId;
-	private User user;
+	private UserDTO userDTO;
 	private Department department;
 	private Short semester;
-	private Boolean isUndergrad;
-	private Boolean isBanned;
+	private Boolean undergrad;
+	private Boolean banned;
 
 	@QueryProjection
-	public StudentDTO(Integer studentId, User user, Department department, Short semester,
-			Boolean isUndergrad, Boolean isBanned) {
+	public StudentDTO(UserDTO userDTO, Department department, Short semester,
+			Boolean undergrad, Boolean banned) {
 		super();
-		this.studentId = studentId;
-		this.user = user;
+		this.userDTO = userDTO;
 		this.department = department;
 		this.semester = semester;
-		this.isUndergrad = isUndergrad;
-		this.isBanned = isBanned;
+		this.undergrad = undergrad;
+		this.banned = banned;
 	}
 
-	public Integer getStudentId() {
-		return studentId;
+	public UserDTO getUserDTO() {
+		return userDTO;
 	}
 
-	public void setStudentId(Integer studentId) {
-		this.studentId = studentId;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserDTO(UserDTO userDTO) {
+		this.userDTO = userDTO;
 	}
 
 	public Department getDepartment() {
@@ -57,20 +46,20 @@ public class StudentDTO {
 		this.semester = semester;
 	}
 
-	public Boolean getIsUndergrad() {
-		return isUndergrad;
+	public Boolean getUndergrad() {
+		return undergrad;
 	}
 
-	public void setIsUndergrad(Boolean isUndergrad) {
-		this.isUndergrad = isUndergrad;
+	public void setUndergrad(Boolean undergrad) {
+		this.undergrad = undergrad;
 	}
 
-	public Boolean getIsBanned() {
-		return isBanned;
+	public Boolean getBanned() {
+		return banned;
 	}
 
-	public void setIsBanned(Boolean isBanned) {
-		this.isBanned = isBanned;
+	public void setBanned(Boolean banned) {
+		this.banned = banned;
 	}
 
 }

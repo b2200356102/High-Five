@@ -6,8 +6,6 @@ import org.hibernate.validator.constraints.Length;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -17,10 +15,6 @@ import jakarta.persistence.Table;
 public class Instructor implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID", nullable = false, unique = true)
-	private Integer id;
-
 	@Column(name = "USER_ID", nullable = false, length = 10)
 	@Length(min = 10, max = 10, message = "USER ID MUST BE 10 CHARACTERS")
 	private String userId;
@@ -31,29 +25,15 @@ public class Instructor implements Serializable {
 	@Column(name = "SCORE", nullable = false)
 	private Double score;
 
-	@Column(name = "IS_DEPARTMENT_MANAGER", nullable = false)
-	private Boolean isDepartmentManager;
-
 	public Instructor() {
 		super();
 	}
 
-	public Instructor(Integer id, String userId, Integer departmentId, Double score,
-			Boolean isDepartmentManager) {
+	public Instructor(String userId, Integer departmentId, Double score) {
 		super();
-		this.id = id;
 		this.userId = userId;
 		this.departmentId = departmentId;
 		this.score = score;
-		this.isDepartmentManager = isDepartmentManager;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public String getUserId() {
@@ -78,14 +58,6 @@ public class Instructor implements Serializable {
 
 	public void setScore(Double score) {
 		this.score = score;
-	}
-
-	public Boolean getIsDepartmentManager() {
-		return isDepartmentManager;
-	}
-
-	public void setIsDepartmentManager(Boolean isDepartmentManager) {
-		this.isDepartmentManager = isDepartmentManager;
 	}
 
 }

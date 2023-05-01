@@ -6,8 +6,6 @@ import org.hibernate.validator.constraints.Length;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -17,10 +15,6 @@ import jakarta.persistence.Table;
 public class Student implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID", nullable = false, unique = true)
-	private Integer id;
-
 	@Column(name = "USER_ID", nullable = false, length = 10)
 	@Length(min = 10, max = 10, message = "USER ID MUST BE 10 CHARACTERS")
 	private String userId;
@@ -31,33 +25,24 @@ public class Student implements Serializable {
 	@Column(name = "SEMESTER")
 	private Short semester;
 
-	@Column(name = "IS_UNDERGRAD")
-	private Boolean isUndergrad;
+	@Column(name = "UNDERGRAD")
+	private Boolean undergrad;
 
-	@Column(name = "IS_BANNED", nullable = false)
-	private Boolean isBanned;
+	@Column(name = "BANNED", nullable = false)
+	private Boolean banned;
 
 	public Student() {
 		super();
 	}
 
-	public Student(Integer id, String userId, Integer departmentId, Short semester,
-			Boolean isUndergrad, Boolean isBanned) {
+	public Student(String userId, Integer departmentId, Short semester, Boolean undergrad,
+			Boolean banned) {
 		super();
-		this.id = id;
 		this.userId = userId;
 		this.departmentId = departmentId;
 		this.semester = semester;
-		this.isUndergrad = isUndergrad;
-		this.isBanned = isBanned;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
+		this.undergrad = undergrad;
+		this.banned = banned;
 	}
 
 	public String getUserId() {
@@ -84,20 +69,20 @@ public class Student implements Serializable {
 		this.semester = semester;
 	}
 
-	public Boolean getIsUndergrad() {
-		return isUndergrad;
+	public Boolean getUndergrad() {
+		return undergrad;
 	}
 
-	public void setIsUndergrad(Boolean isUndergrad) {
-		this.isUndergrad = isUndergrad;
+	public void setUndergrad(Boolean undergrad) {
+		this.undergrad = undergrad;
 	}
 
-	public Boolean getIsBanned() {
-		return isBanned;
+	public Boolean getBanned() {
+		return banned;
 	}
 
-	public void setIsBanned(Boolean isBanned) {
-		this.isBanned = isBanned;
+	public void setBanned(Boolean banned) {
+		this.banned = banned;
 	}
 
 }

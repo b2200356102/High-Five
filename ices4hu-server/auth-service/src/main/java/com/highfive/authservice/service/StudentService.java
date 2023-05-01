@@ -2,17 +2,24 @@ package com.highfive.authservice.service;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import com.highfive.authservice.entity.Department;
 import com.highfive.authservice.entity.QDepartment;
 import com.highfive.authservice.entity.QStudent;
 import com.highfive.authservice.entity.QUser;
 import com.highfive.authservice.entity.Student;
 import com.highfive.authservice.entity.User;
 import com.highfive.authservice.entity.dto.QStudentDTO;
+import com.highfive.authservice.entity.dto.QUserDTO;
 import com.highfive.authservice.entity.dto.StudentDTO;
+import com.highfive.authservice.entity.dto.UserDTO;
 import com.highfive.authservice.repository.StudentRepository;
+import com.highfive.authservice.utils.exception.DepartmentNotFoundException;
 import com.highfive.authservice.utils.exception.StudentNotFoundException;
 import com.highfive.authservice.utils.exception.UserNotFoundException;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -32,6 +39,9 @@ public class StudentService {
 	private UserService userService;
 	private QUser user = QUser.user;
 
+	@Inject
+	@Lazy
+	private DepartmentService departmentService;
 	private QDepartment department = QDepartment.department;
 
 	@PersistenceContext
@@ -40,8 +50,8 @@ public class StudentService {
 	@Transactional
 	public Student addStudent(User user, Integer departmentId) {
 		userService.addUser(user);
-		Student newStudent = new Student(null, user.getId(), departmentId, (short) 1,
-				true, false);
+		Student newStudent = new Student(user.getId(), departmentId, (short) 1, true,
+				false);
 		return repository.save(newStudent);
 	}
 
@@ -50,36 +60,22 @@ public class StudentService {
 	}
 
 	public List<StudentDTO> getStudentDTOs() {
+
+		JPAQuery<UserDTO> subQuery = new JPAQuery<>(em);
+		subQuery = subQuery
+				.select(new QUserDTO(user.id, user.name, user.mail, user.pending))
+				.from(user);
+
 		JPAQuery<StudentDTO> query = new JPAQuery<>(em);
 
 		return query
-				.select(new QStudentDTO(student.id, user, department, student.semester,
-						student.isUndergrad, student.isBanned))
+				.select(new QStudentDTO(subQuery, department, student.semester,
+						student.undergrad, student.banned))
 				.from(student).innerJoin(user).on(student.userId.eq(user.id))
 				.innerJoin(department).on(student.departmentId.eq(department.id)).fetch();
 	}
 
-	public Student getStudentById(Integer id) throws StudentNotFoundException {
-		Student student = repository.findById(id).orElse(null);
-		if (student == null)
-			throw new StudentNotFoundException();
-		return student;
-	}
-
-	public StudentDTO getStudentDTOById(Integer id) throws StudentNotFoundException {
-		JPAQuery<StudentDTO> query = new JPAQuery<>(em);
-		StudentDTO studentDTO = query
-				.select(new QStudentDTO(student.id, user, department, student.semester,
-						student.isUndergrad, student.isBanned))
-				.from(student).innerJoin(user).on(student.userId.eq(user.id))
-				.innerJoin(department).on(student.departmentId.eq(department.id))
-				.where(student.id.eq(id)).fetchFirst();
-		if (studentDTO == null)
-			throw new StudentNotFoundException();
-		return studentDTO;
-	}
-
-	public Student getStudentByUserId(String userId) throws StudentNotFoundException {
+	public Student getStudentById(String userId) throws StudentNotFoundException {
 		JPAQuery<Student> query = new JPAQuery<>(em);
 		Student studentResponse = query.select(student).from(student).innerJoin(user)
 				.on(student.userId.eq(user.id).and(user.id.eq(userId))).fetchFirst();
@@ -88,44 +84,42 @@ public class StudentService {
 		return studentResponse;
 	}
 
-	public StudentDTO getStudentDTOByUserId(String userId)
-			throws StudentNotFoundException, UserNotFoundException {
-		Student student = getStudentByUserId(userId);
-		if (student == null)
-			throw new StudentNotFoundException();
-		return getStudentDTOById(student.getId());
+	public StudentDTO getStudentDTOById(String userId) throws StudentNotFoundException,
+			UserNotFoundException, DepartmentNotFoundException {
+
+		User user = userService.getUserById(userId);
+		Student student = getStudentById(userId);
+		Department department = departmentService
+				.getDepartmentById(student.getDepartmentId());
+
+		return new StudentDTO(user.toUserDTO(), department, student.getSemester(),
+				student.getUndergrad(), student.getBanned());
 	}
 
 	@Transactional
 	public Student setStudent(StudentDTO studentDTO) throws UserNotFoundException {
-		Student newStudent = repository.findById(studentDTO.getStudentId()).orElse(null);
+		Student newStudent = repository.findById(studentDTO.getUserDTO().getId())
+				.orElse(null);
 		if (newStudent == null)
 			throw new UserNotFoundException();
 
-		User user = userService.setUser(studentDTO.getUser());
-		studentDTO.setUser(user);
+		userService.setUser(studentDTO.getUserDTO());
 
 		if (studentDTO.getSemester() != null)
 			newStudent.setSemester(studentDTO.getSemester());
 		if (studentDTO.getDepartment() != null)
 			newStudent.setDepartmentId(studentDTO.getDepartment().getId());
-		if (studentDTO.getIsUndergrad() != null)
-			newStudent.setIsUndergrad(studentDTO.getIsUndergrad());
-		if (studentDTO.getIsBanned() != null)
-			newStudent.setIsBanned(studentDTO.getIsBanned());
+		if (studentDTO.getUndergrad() != null)
+			newStudent.setUndergrad(studentDTO.getUndergrad());
+		if (studentDTO.getBanned() != null)
+			newStudent.setBanned(studentDTO.getBanned());
 
 		return repository.save(newStudent);
 	}
 
 	@Transactional
-	public void removeStudentById(Integer id) throws StudentNotFoundException {
-		repository.deleteById(id);
-		userService.removeUserById(getStudentById(id).getUserId());
-	}
-
-	@Transactional
-	public void removeStudentByUserId(String userId) throws StudentNotFoundException {
-		repository.deleteById(getStudentByUserId(userId).getId());
+	public void removeStudentById(String userId) throws StudentNotFoundException {
+		repository.deleteById(userId);
 		userService.removeUserById(userId);
 	}
 

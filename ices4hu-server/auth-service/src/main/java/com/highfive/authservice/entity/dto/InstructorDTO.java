@@ -1,49 +1,36 @@
 package com.highfive.authservice.entity.dto;
 
-import com.highfive.authservice.entity.User;
+import com.highfive.authservice.entity.Department;
 import com.querydsl.core.annotations.QueryProjection;
 
 public class InstructorDTO {
 
-	private Integer instructorId;
-	private User user;
-	private Integer departmentId;
+	private UserDTO userDTO;
+	private Department department;
 	private Double score;
-	private Boolean isDepartmentManager;
 
 	@QueryProjection
-	public InstructorDTO(Integer instructorId, User user, Integer departmentId,
-			Double score, Boolean isDepartmentManager) {
+	public InstructorDTO(UserDTO userDTO, Department department, Double score) {
 		super();
-		this.instructorId = instructorId;
-		this.user = user;
-		this.departmentId = departmentId;
+		this.userDTO = userDTO;
+		this.department = department;
 		this.score = score;
-		this.isDepartmentManager = isDepartmentManager;
 	}
 
-	public Integer getInstructorId() {
-		return instructorId;
+	public UserDTO getUserDTO() {
+		return userDTO;
 	}
 
-	public void setInstructorId(Integer instructorId) {
-		this.instructorId = instructorId;
+	public void setUserDTO(UserDTO userDTO) {
+		this.userDTO = userDTO;
 	}
 
-	public User getUser() {
-		return user;
+	public Department getDepartment() {
+		return department;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public Integer getDepartmentId() {
-		return departmentId;
-	}
-
-	public void setDepartmentId(Integer departmentId) {
-		this.departmentId = departmentId;
+	public void setDepartment(Department department) {
+		this.department = department;
 	}
 
 	public Double getScore() {
@@ -52,14 +39,6 @@ public class InstructorDTO {
 
 	public void setScore(Double score) {
 		this.score = score;
-	}
-
-	public Boolean getIsDepartmentManager() {
-		return isDepartmentManager;
-	}
-
-	public void setIsDepartmentManager(Boolean isDepartmentManager) {
-		this.isDepartmentManager = isDepartmentManager;
 	}
 
 }

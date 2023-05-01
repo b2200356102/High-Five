@@ -2,16 +2,22 @@ package com.highfive.authservice.service;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import com.highfive.authservice.entity.Department;
 import com.highfive.authservice.entity.Instructor;
+import com.highfive.authservice.entity.QDepartment;
 import com.highfive.authservice.entity.QInstructor;
 import com.highfive.authservice.entity.QUser;
 import com.highfive.authservice.entity.User;
-import com.highfive.authservice.entity.dto.DepartmentDTO;
 import com.highfive.authservice.entity.dto.InstructorDTO;
 import com.highfive.authservice.entity.dto.QInstructorDTO;
+import com.highfive.authservice.entity.dto.QUserDTO;
+import com.highfive.authservice.entity.dto.UserDTO;
 import com.highfive.authservice.repository.InstructorRepository;
 import com.highfive.authservice.utils.exception.DepartmentNotFoundException;
 import com.highfive.authservice.utils.exception.InstructorNotFoundException;
@@ -33,8 +39,13 @@ public class InstructorService {
 	private UserService userService;
 	private QUser user = QUser.user;
 
-	@Autowired
+	@Inject
+	@Lazy
 	private DepartmentService departmentService;
+	private QDepartment department = QDepartment.department;
+
+	@Autowired
+	private DepartmentManagerService departmentManagerService;
 
 	@PersistenceContext
 	EntityManager em;
@@ -42,8 +53,7 @@ public class InstructorService {
 	@Transactional
 	public Instructor addInstructor(User user, Integer departmentId) {
 		userService.addUser(user);
-		Instructor newInstructor = new Instructor(null, user.getId(), departmentId, 100.0,
-				false);
+		Instructor newInstructor = new Instructor(user.getId(), departmentId, 100.0);
 		return repository.save(newInstructor);
 	}
 
@@ -52,35 +62,22 @@ public class InstructorService {
 	}
 
 	public List<InstructorDTO> getInstructorDTOs() {
+
+		JPAQuery<UserDTO> userQuery = new JPAQuery<>(em);
+		userQuery = userQuery
+				.select(new QUserDTO(user.id, user.name, user.mail, user.pending))
+				.from(user);
+
 		JPAQuery<InstructorDTO> query = new JPAQuery<>(em);
-		return query
-				.select(new QInstructorDTO(instructor.id, user, instructor.departmentId,
-						instructor.score, instructor.isDepartmentManager))
+
+		return query.select(new QInstructorDTO(userQuery, department, instructor.score))
 				.from(instructor).innerJoin(user).on(instructor.userId.eq(user.id))
+				.innerJoin(department).on(instructor.departmentId.eq(department.id))
 				.fetch();
+
 	}
 
-	public Instructor getInstructorById(Integer id) throws InstructorNotFoundException {
-		Instructor instructor = repository.findById(id).orElse(null);
-		if (instructor == null)
-			throw new InstructorNotFoundException();
-		return instructor;
-	}
-
-	public InstructorDTO getInstructorDTOById(Integer id)
-			throws InstructorNotFoundException {
-		JPAQuery<InstructorDTO> query = new JPAQuery<>(em);
-		InstructorDTO instructorDTO = query
-				.select(new QInstructorDTO(instructor.id, user, instructor.departmentId,
-						instructor.score, instructor.isDepartmentManager))
-				.from(instructor).innerJoin(user).on(instructor.userId.eq(user.id))
-				.where(instructor.id.eq(id)).fetchFirst();
-		if (instructorDTO == null)
-			throw new InstructorNotFoundException();
-		return instructorDTO;
-	}
-
-	public Instructor getInstructorByUserId(String userId)
+	public Instructor getInstructorById(String userId)
 			throws InstructorNotFoundException {
 		JPAQuery<Instructor> query = new JPAQuery<>(em);
 		Instructor instructorResponse = query.select(instructor).from(instructor)
@@ -91,50 +88,33 @@ public class InstructorService {
 		return instructorResponse;
 	}
 
-	public InstructorDTO getInstructorDTOByUserId(String userId)
-			throws InstructorNotFoundException, UserNotFoundException {
-		Instructor instructor = getInstructorByUserId(userId);
+	public InstructorDTO getInstructorDTOById(String userId)
+			throws InstructorNotFoundException, UserNotFoundException,
+			DepartmentNotFoundException {
+		User user = userService.getUserById(userId);
+		if (user == null)
+			throw new UserNotFoundException();
+		Instructor instructor = getInstructorById(userId);
 		if (instructor == null)
 			throw new InstructorNotFoundException();
-		return getInstructorDTOById(instructor.getId());
+		Department department = departmentService
+				.getDepartmentById(instructor.getDepartmentId());
+		if (department == null)
+			throw new DepartmentNotFoundException();
+
+		return new InstructorDTO(user.toUserDTO(), department, instructor.getScore());
 	}
 
 	@Transactional
 	public Instructor setInstructor(InstructorDTO instructorDTO)
 			throws UserNotFoundException, InstructorNotFoundException,
 			DepartmentNotFoundException {
-		Instructor newInstructor = getInstructorByUserId(instructorDTO.getUser().getId());
+		Instructor newInstructor = getInstructorById(instructorDTO.getUserDTO().getId());
 
-		userService.setUser(instructorDTO.getUser());
+		userService.setUser(instructorDTO.getUserDTO());
 
-		if (instructorDTO.getDepartmentId() != null)
-			newInstructor.setDepartmentId(instructorDTO.getDepartmentId());
-		if (instructorDTO.getIsDepartmentManager() != null) {
-			if (instructorDTO.getIsDepartmentManager()) {
-				newInstructor
-						.setIsDepartmentManager(instructorDTO.getIsDepartmentManager());
-
-				Instructor oldDepartmentManager = getInstructorByUserId(departmentService
-						.getDepartmentById(newInstructor.getDepartmentId())
-						.getDepartmentManagerId());
-				InstructorDTO oldDepartmentManagerDTO = new InstructorDTO(
-						oldDepartmentManager.getId(),
-						userService.getUserById(oldDepartmentManager.getUserId()), null,
-						null, false);
-				setInstructor(oldDepartmentManagerDTO);
-
-				DepartmentDTO departmentDTO = new DepartmentDTO(
-						instructorDTO.getDepartmentId(), null, instructorDTO);
-				departmentService.setDepartment(departmentDTO);
-			} else {
-				newInstructor
-						.setIsDepartmentManager(instructorDTO.getIsDepartmentManager());
-				DepartmentDTO departmentDTO = new DepartmentDTO(
-						instructorDTO.getDepartmentId(), null, null);
-				departmentService.setDepartment(departmentDTO);
-			}
-		}
-
+		if (instructorDTO.getDepartment() != null)
+			newInstructor.setDepartmentId(instructorDTO.getDepartment().getId());
 		if (instructorDTO.getScore() != null)
 			newInstructor.setScore(instructorDTO.getScore());
 
@@ -142,29 +122,12 @@ public class InstructorService {
 	}
 
 	@Transactional
-	public void removeInstructorById(Integer id)
+	public void removeInstructorById(String id)
 			throws InstructorNotFoundException, DepartmentNotFoundException {
-		Instructor instructor = getInstructorById(id);
-		if (instructor.getIsDepartmentManager()) {
-			DepartmentDTO departmentDTO = new DepartmentDTO(instructor.getDepartmentId(),
-					null, null);
-			departmentService.setDepartment(departmentDTO);
-		}
+
+		departmentManagerService.removeDepartmentManager(id);
 		repository.deleteById(id);
 		userService.removeUserById(getInstructorById(id).getUserId());
-	}
-
-	@Transactional
-	public void removeInstructorByUserId(String userId)
-			throws InstructorNotFoundException, DepartmentNotFoundException {
-		Instructor instructor = getInstructorByUserId(userId);
-		if (instructor.getIsDepartmentManager()) {
-			DepartmentDTO departmentDTO = new DepartmentDTO(instructor.getDepartmentId(),
-					null, null);
-			departmentService.setDepartment(departmentDTO);
-		}
-		repository.deleteById(getInstructorByUserId(userId).getId());
-		userService.removeUserById(userId);
 	}
 
 }
