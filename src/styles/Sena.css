@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@600;800&display=swap');
+
+* {
+  margin: 0;
+  font-family: "Inter";
+  font-weight: 600;
+  font-size: 24px;
+}
+
+.sena-app{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background: #FFFBF5;
+  height: 600px;
+}
+
+.form, .background{
+  display: flex;
+  align-items: center;
+}
+
+header{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  margin: 10px 0px;
+}
+
+.page-title, .page-button{
+  font-size: 32px;
+}
+
+.page-title{
+  text-decoration-line: underline;
+  color: #674188;
+}
+
+button{
+  border: none;
+  cursor: pointer;
+}
+
+.page-button{
+  background: none;
+  color: #C3ACD0;
+}
+
+.page-button:hover{
+  color: #674188;
+}
+
+.login, .sign-up{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0px 200px;
+}
+
+form{
+  width: 500px;
+}
+
+.user-class{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.checkbox{
+  display: inline;
+  font-size: 18px;
+  color: #674188;
+}
+
+.reset-pwd-button{
+  justify-content: flex-end;
+  background: none;
+  font-size: 18px;
+  text-decoration-line: underline;
+  color: #674188;
+}
+
+.submit-button{
+  padding: 10px 30px;
+  margin: 10px;
+  background-color: #C3ACD0;
+  border-radius: 55px;
+  font-weight: 800;
+  color: #FFFBF5;
+}
+
+.submit-button:hover{
+  background-color: #674188;
+}
+
+img{
+  height: 500px;
+}
