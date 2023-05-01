@@ -1,0 +1,156 @@
+.pageContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    /* Center horizontally */
+    align-items: center;
+    /* Center vertically */
+    height: 100vh;
+    /* Set height to fill the viewport */
+    margin-top: 5%;
+    
+}
+
+.rectangle {
+    background-color: #674188;
+    /* Set the background color of the rectangle */
+    padding: 1rem;
+    /* Add padding for content inside the rectangle */
+    width: 80%;
+    /* Set the width of the rectangle */
+    text-align: center;
+    /* Center text inside the rectangle */
+    border-radius: 20px;
+
+
+}
+
+.slotrectangle {
+    background-color: #F7EFE5;
+    /* Set the background color of the rectangle */
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    /* Add padding for content inside the rectangle */
+    width: 97%;
+    /* Set the width of the rectangle */
+    height: min-content;
+    text-align: left;
+    /* Center text inside the rectangle */
+    border-radius: 10px;
+    margin-left: auto;
+    /* Center horizontally */
+    margin-right: auto;
+    /* Center horizontally */
+}
+
+.fieldrectangle {
+
+    background-color: #FFFBF5;
+    /* Set the background color of the rectangle */
+    margin-top: 10px;
+    text-align: left;
+    /* Center text inside the rectangle */
+    border-radius: 10px;
+    margin-left: auto;
+    /* Center horizontally */
+    margin-right: auto;
+    /* Center horizontally */
+}
+
+.fieldrectangle input[type="text"] {
+
+    background: none;
+    width: 98%;
+    border: none;
+    /* Remove border */
+    color: #674188;
+    /* Set input text color */
+    font-size: 16px;
+    /* Set input text font size */
+    font-weight: 500;
+    margin-left: 1%;
+    transition: border-color 0.3s;
+}
+
+input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid #C3ACD0;
+    outline: none;
+    cursor: pointer;
+}
+
+input[type="radio"]:checked {
+    background-color: #674188;
+    border-color: #674188;
+}
+
+.radio-label {
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: 16px;
+    color: #674188;
+}
+
+.fieldrectangle input[type="text"]:focus {
+    outline: none;
+    /* Remove default focus outline */
+    border: none;
+}
+
+
+.fieldrectangle input[type="text"]::placeholder {
+    color: #674188;
+    /* Set placeholder color */
+}
+
+.fieldrectangle input[type="text"]:focus::placeholder {
+    color: #FFFBF5;
+    /* Set placeholder color when the text field is focused */
+}
+
+.mainText {
+    color: #674188;
+    font-weight: bolder;
+    font-size: x-large;
+    margin: 0.2rem 0;
+    /* Sets margin to 0.5rem from top and bottom */
+}
+
+
+
+.buttonContainer {
+    position: relative;
+    top: 20px;
+    left: 40%;
+
+}
+
+.myButton {
+    /* Add your button styles here */
+    background-color: #674188;
+    border: none;
+    border-radius: 100px;
+    color: #FFFBF5;
+    display: flow-root;
+    font-size: xx-large;
+    width: 130%;
+
+}
+
+.myButton:hover {
+    /* Styles for the button when hovered */
+    /* Change the color property to the desired color */
+    background-color: #C3ACD0;
+}
+
+.myButton:active {
+    /* Styles for the button when hovered */
+    /* Change the color property to the desired color */
+    background-color: #2b064b;
+}
