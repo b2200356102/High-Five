@@ -178,10 +178,12 @@ public class AuthController {
 					HttpStatus.OK);
 	}
 
-	@GetMapping("api/psw/{userId}/")
-	public CustomResponseEntity<String> readUserPassword(
-			@PathVariable(name = "userId") String userId) throws UserNotFoundException {
-		return new CustomResponseEntity<String>(userService.getUserPasswordById(userId),
+	@GetMapping("api/psw/")
+	public CustomResponseEntity<Boolean> readUserPassword(
+			@RequestParam(name = "userId") String userId,
+			@RequestParam(name = "password") String password)
+			throws UserNotFoundException {
+		return new CustomResponseEntity<>(userService.checkPassword(userId, password),
 				HttpStatus.OK);
 	}
 

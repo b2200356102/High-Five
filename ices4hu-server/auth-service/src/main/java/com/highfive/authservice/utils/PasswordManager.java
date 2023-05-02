@@ -2,10 +2,18 @@ package com.highfive.authservice.utils;
 
 import java.util.Random;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 public class PasswordManager {
 
 	public static String encode(String rawPassword) {
-		return null;
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		return encoder.encode(rawPassword);
+	}
+
+	public static boolean match(String dbPassword, String password) {
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		return encoder.matches(dbPassword, password);
 	}
 
 	public static String generateNewPassword() {

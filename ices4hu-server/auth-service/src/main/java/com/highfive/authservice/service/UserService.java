@@ -33,6 +33,7 @@ public class UserService {
 	private EntityManager em;
 
 	public User addUser(User user) {
+		user.setPassword(PasswordManager.encode(user.getPassword()));
 		return repository.save(user);
 	}
 
@@ -59,9 +60,10 @@ public class UserService {
 				.from(user).where(user.id.eq(id)).fetchFirst();
 	}
 
-	public String getUserPasswordById(String id) throws UserNotFoundException {
+	public Boolean checkPassword(String id, String password)
+			throws UserNotFoundException {
 		User user = getUserById(id);
-		return user.getPassword();
+		return PasswordManager.match(user.getPassword(), password);
 	}
 
 	public User setUser(UserDTO user) throws UserNotFoundException {

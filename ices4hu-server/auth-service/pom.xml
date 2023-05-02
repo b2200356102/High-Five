@@ -61,6 +61,17 @@
             <artifactId>mysql-socket-factory</artifactId>
             <version>1.0.16</version>
         </dependency>
+        
+        <dependency>
+	      <groupId>org.springframework.boot</groupId>
+	      <artifactId>spring-boot-starter-security</artifactId>
+	    </dependency>
+	    
+	    <dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-crypto</artifactId>
+		</dependency>
+
 
 		<dependency>
 			<groupId>com.mysql</groupId>
