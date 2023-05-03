@@ -34,7 +34,8 @@ public class InstructorService {
 	private InstructorRepository repository;
 	private QInstructor instructor = QInstructor.instructor;
 
-	@Autowired
+	@Inject
+	@Lazy
 	private UserService userService;
 	private QUser user = QUser.user;
 
@@ -43,13 +44,13 @@ public class InstructorService {
 	private DepartmentService departmentService;
 	private QDepartment department = QDepartment.department;
 
-	@Autowired
+	@Inject
+	@Lazy
 	private DepartmentManagerService departmentManagerService;
 
 	@PersistenceContext
 	EntityManager em;
 
-	@Transactional
 	public Instructor addInstructor(User user, Integer departmentId) {
 		Instructor newInstructor = new Instructor(user.getId(), departmentId, 100.0);
 		return repository.save(newInstructor);
@@ -118,7 +119,6 @@ public class InstructorService {
 
 	@Transactional
 	public void removeInstructorById(String id) throws DepartmentNotFoundException {
-
 		departmentManagerService.removeDepartmentManager(id);
 		repository.deleteById(id);
 	}

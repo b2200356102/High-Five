@@ -53,14 +53,14 @@ public class AuthController {
 	@Autowired
 	UserService userService;
 
-	@PostMapping("api/departments/")
+	@PostMapping("/api/departments/")
 	public ResponseEntity<Department> createDepartment(
 			@RequestBody Department department) {
 		return new ResponseEntity<>(departmentService.addDepartment(department),
 				HttpStatus.OK);
 	}
 
-	@PostMapping("api/users/{departmentId}")
+	@PostMapping("/api/users/{departmentId}/")
 	public ResponseEntity<Object> createUser(@RequestBody @Valid User user,
 			@PathVariable(name = "departmentId", required = false) Integer departmentId)
 			throws UserAlreadyExistsException {

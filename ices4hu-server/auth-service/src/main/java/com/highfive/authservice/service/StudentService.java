@@ -34,7 +34,8 @@ public class StudentService {
 	private StudentRepository repository;
 	private QStudent student = QStudent.student;
 
-	@Autowired
+	@Inject
+	@Lazy
 	private UserService userService;
 	private QUser user = QUser.user;
 
@@ -46,7 +47,6 @@ public class StudentService {
 	@PersistenceContext
 	private EntityManager em;
 
-	@Transactional
 	public Student addStudent(User user, Integer departmentId) {
 		Student newStudent = new Student(user.getId(), departmentId, (short) 1, true,
 				false);
@@ -115,7 +115,6 @@ public class StudentService {
 		return repository.save(newStudent);
 	}
 
-	@Transactional
 	public void removeStudentById(String userId) {
 		repository.deleteById(userId);
 	}

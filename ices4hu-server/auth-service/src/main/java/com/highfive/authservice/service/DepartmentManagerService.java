@@ -53,7 +53,10 @@ public class DepartmentManagerService {
 		DepartmentManager departmentManagerResponse = query.select(departmentManager)
 				.from(departmentManager)
 				.where(departmentManager.instructorId.eq(instructorId)).fetchFirst();
-		repository.delete(departmentManagerResponse);
+		if (departmentManagerResponse == null)
+			return;
+
+		repository.deleteById(departmentManagerResponse.getId());
 	}
 
 }
