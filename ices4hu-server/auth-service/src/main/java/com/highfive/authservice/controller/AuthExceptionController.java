@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.highfive.authservice.utils.CustomResponseEntity;
 import com.highfive.authservice.utils.exception.DepartmentNotFoundException;
 import com.highfive.authservice.utils.exception.UserNotFoundException;
 
@@ -18,7 +18,7 @@ public class AuthExceptionController {
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public CustomResponseEntity<List<String>> handleInvalidArgument(
+	public ResponseEntity<List<String>> handleInvalidArgument(
 			MethodArgumentNotValidException e) {
 
 		List<String> invalidArguments = new ArrayList<>();
@@ -27,24 +27,23 @@ public class AuthExceptionController {
 			invalidArguments.add(err.getDefaultMessage());
 		});
 
-		return new CustomResponseEntity<>(invalidArguments, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(invalidArguments, HttpStatus.BAD_REQUEST);
 	}
 
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(UserNotFoundException.class)
-	public CustomResponseEntity<Object> handleUserNotFound(UserNotFoundException e) {
+	public ResponseEntity<String> handleUserNotFound(UserNotFoundException e) {
 
-		return new CustomResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR,
-				"USER NOT FOUND");
+		return new ResponseEntity<>("USER NOT FOUND", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(DepartmentNotFoundException.class)
-	public CustomResponseEntity<Object> handleDepartmentNotFound(
+	public ResponseEntity<Object> handleDepartmentNotFound(
 			DepartmentNotFoundException e) {
 
-		return new CustomResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR,
-				"DEPARTMENT NOT FOUND");
+		return new ResponseEntity<>("DEPARTMENT NOT FOUND",
+				HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }

@@ -13,11 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.highfive.authservice.entity.Admin;
 import com.highfive.authservice.entity.Department;
 import com.highfive.authservice.entity.DepartmentManager;
-import com.highfive.authservice.entity.Instructor;
-import com.highfive.authservice.entity.Student;
 import com.highfive.authservice.entity.User;
 import com.highfive.authservice.entity.dto.InstructorDTO;
 import com.highfive.authservice.entity.dto.StudentDTO;
@@ -28,11 +25,8 @@ import com.highfive.authservice.service.DepartmentService;
 import com.highfive.authservice.service.InstructorService;
 import com.highfive.authservice.service.StudentService;
 import com.highfive.authservice.service.UserService;
-import com.highfive.authservice.utils.CustomResponseEntity;
-import com.highfive.authservice.utils.exception.AdminNotFoundException;
 import com.highfive.authservice.utils.exception.DepartmentNotFoundException;
-import com.highfive.authservice.utils.exception.InstructorNotFoundException;
-import com.highfive.authservice.utils.exception.StudentNotFoundException;
+import com.highfive.authservice.utils.exception.UserAlreadyExistsException;
 import com.highfive.authservice.utils.exception.UserNotFoundException;
 
 import jakarta.validation.Valid;
@@ -59,222 +53,151 @@ public class AuthController {
 	@Autowired
 	UserService userService;
 
-	@PostMapping("api/admins/")
-	public CustomResponseEntity<Admin> updateAdmin(@RequestBody User user)
-			throws UserNotFoundException {
-		return new CustomResponseEntity<>(adminService.addAdmin(user), HttpStatus.OK);
-	}
-
 	@PostMapping("api/departments/")
-	public CustomResponseEntity<Department> createDepartment(
+	public ResponseEntity<Department> createDepartment(
 			@RequestBody Department department) {
-		return new CustomResponseEntity<>(departmentService.addDepartment(department),
+		return new ResponseEntity<>(departmentService.addDepartment(department),
 				HttpStatus.OK);
 	}
 
-	@PostMapping("api/department_managers/")
-	public CustomResponseEntity<DepartmentManager> createDepartmentManager(
-			@RequestBody DepartmentManager departmentManager) {
-		return new CustomResponseEntity<>(
-				departmentManagerService.addDepartmentManager(departmentManager),
+	@PostMapping("api/users/{departmentId}")
+	public ResponseEntity<Object> createUser(@RequestBody @Valid User user,
+			@PathVariable(name = "departmentId", required = false) Integer departmentId)
+			throws UserAlreadyExistsException {
+		return new ResponseEntity<>(userService.addUser(user, departmentId),
 				HttpStatus.OK);
-	}
-
-	@PostMapping("api/instructors/{departmentId}/")
-	public CustomResponseEntity<Instructor> createInstructor(
-			@RequestBody @Valid User user,
-			@PathVariable(name = "departmentId") Integer departmentId) {
-		return new CustomResponseEntity<>(
-				instructorService.addInstructor(user, departmentId), HttpStatus.OK);
-	}
-
-	@PostMapping("api/students/{departmentId}/")
-	public CustomResponseEntity<Student> createStudent(@RequestBody @Valid User user,
-			@PathVariable(name = "departmentId") Integer departmentId) {
-		return new CustomResponseEntity<>(studentService.addStudent(user, departmentId),
-				HttpStatus.OK);
-	}
-
-	@PostMapping("api/users/")
-	public CustomResponseEntity<User> createUser(@RequestBody @Valid User user) {
-		return new CustomResponseEntity<>(userService.addUser(user), HttpStatus.OK);
 	}
 
 	@GetMapping("api/admins/")
-	public CustomResponseEntity<Object> readAdmins(
-			@RequestParam(name = "userId", required = false) String userId)
-			throws AdminNotFoundException {
-
-		if (userId == null)
-			return new CustomResponseEntity<>(adminService.getAdmins(), HttpStatus.OK);
-		else
-			return new CustomResponseEntity<>(adminService.getAdminById(userId),
-					HttpStatus.OK);
+	public ResponseEntity<Object> readAdmins() {
+		return new ResponseEntity<>(adminService.getAdmins(), HttpStatus.OK);
 	}
 
 	@GetMapping("api/departments/")
-	public CustomResponseEntity<Object> readDepartments(
+	public ResponseEntity<Object> readDepartments(
 			@RequestParam(name = "departmentId", required = false) Integer departmentId)
 			throws DepartmentNotFoundException {
 
 		if (departmentId == null)
-			return new CustomResponseEntity<>(departmentService.getDepartments(),
+			return new ResponseEntity<>(departmentService.getDepartments(),
 					HttpStatus.OK);
 		else
-			return new CustomResponseEntity<>(
-					departmentService.getDepartmentById(departmentId), HttpStatus.OK);
+			return new ResponseEntity<>(departmentService.getDepartmentById(departmentId),
+					HttpStatus.OK);
 	}
 
 	@GetMapping("api/department_managers/")
-	public CustomResponseEntity<Object> readDepartmentManagers(
+	public ResponseEntity<Object> readDepartmentManagers(
 			@RequestParam(name = "departmentId", required = false) Integer departmentId)
 			throws DepartmentNotFoundException {
 
 		if (departmentId == null)
-			return new CustomResponseEntity<>(
-					departmentManagerService.getDepartmentManagers(), HttpStatus.OK);
+			return new ResponseEntity<>(departmentManagerService.getDepartmentManagers(),
+					HttpStatus.OK);
 		else
-			return new CustomResponseEntity<>(departmentManagerService
+			return new ResponseEntity<>(departmentManagerService
 					.getDepartmentManagerByDepartmentId(departmentId), HttpStatus.OK);
 	}
 
 	@GetMapping("api/instructors/")
-	public CustomResponseEntity<Object> readInstructors(
+	public ResponseEntity<Object> readInstructors(
 			@RequestParam(name = "userId", required = false) String userId)
-			throws InstructorNotFoundException, UserNotFoundException,
-			DepartmentNotFoundException {
+			throws UserNotFoundException, DepartmentNotFoundException {
 
 		if (userId == null)
-			return new CustomResponseEntity<>(instructorService.getInstructorDTOs(),
+			return new ResponseEntity<>(instructorService.getInstructorDTOs(),
 					HttpStatus.OK);
 		else
-			return new CustomResponseEntity<>(
-					instructorService.getInstructorDTOById(userId), HttpStatus.OK);
+			return new ResponseEntity<>(instructorService.getInstructorDTOById(userId),
+					HttpStatus.OK);
 	}
 
 	@GetMapping("api/students/")
-	public CustomResponseEntity<Object> readStudents(
+	public ResponseEntity<Object> readStudents(
 			@RequestParam(name = "userId", required = false) String userId)
-			throws StudentNotFoundException, UserNotFoundException,
-			DepartmentNotFoundException {
+			throws UserNotFoundException, DepartmentNotFoundException {
 
 		if (userId == null)
-			return new CustomResponseEntity<>(studentService.getStudentDTOs(),
-					HttpStatus.OK);
+			return new ResponseEntity<>(studentService.getStudentDTOs(), HttpStatus.OK);
 		else
-			return new CustomResponseEntity<>(studentService.getStudentDTOById(userId),
+			return new ResponseEntity<>(studentService.getStudentDTOById(userId),
 					HttpStatus.OK);
 	}
 
 	@GetMapping("api/users/")
-	public CustomResponseEntity<Object> readUsers(
+	public ResponseEntity<Object> readUsers(
 			@RequestParam(name = "userId", required = false) String userId)
-			throws UserNotFoundException {
+			throws UserNotFoundException, DepartmentNotFoundException {
 
 		if (userId == null)
-			return new CustomResponseEntity<>(userService.getUserDTOs(), HttpStatus.OK);
+			return new ResponseEntity<>(userService.getUserDTOs(), HttpStatus.OK);
 		else
-			return new CustomResponseEntity<>(userService.getUserDTOById(userId),
+			return new ResponseEntity<>(userService.getUserDTOById(userId),
 					HttpStatus.OK);
 	}
 
 	@GetMapping("api/psw/")
-	public CustomResponseEntity<Boolean> readUserPassword(
+	public ResponseEntity<Boolean> checkPassword(
 			@RequestParam(name = "userId") String userId,
 			@RequestParam(name = "password") String password)
 			throws UserNotFoundException {
-		return new CustomResponseEntity<>(userService.checkPassword(userId, password),
+		return new ResponseEntity<>(userService.checkPassword(userId, password),
 				HttpStatus.OK);
 	}
 
 	@PutMapping("api/departments/")
-	public CustomResponseEntity<Department> updateDepartment(
-			@RequestBody Department department) throws DepartmentNotFoundException {
-		return new CustomResponseEntity<>(departmentService.setDepartment(department),
-				HttpStatus.OK);
-	}
-
-	@PutMapping("api/department_managers/")
-	public CustomResponseEntity<DepartmentManager> updateDepartmentManager(
-			@RequestParam(name = "departmentId") Integer departmentId,
-			@RequestParam(name = "instructorId") String instructorId)
+	public ResponseEntity<Department> updateDepartment(@RequestBody Department department)
 			throws DepartmentNotFoundException {
-		return new CustomResponseEntity<>(
-				departmentManagerService.setDepartmentManager(departmentId, instructorId),
+		return new ResponseEntity<>(departmentService.setDepartment(department),
 				HttpStatus.OK);
 	}
 
-	@PutMapping("api/instructors/")
-	public CustomResponseEntity<Instructor> updateInstructor(
-			@RequestBody InstructorDTO instructorDTO) throws UserNotFoundException,
-			InstructorNotFoundException, DepartmentNotFoundException {
-		return new CustomResponseEntity<>(instructorService.setInstructor(instructorDTO),
-				HttpStatus.OK);
-	}
+	@PutMapping("api/users/{role}/")
+	public ResponseEntity<Object> updateDepartmentManager(
+			@PathVariable(name = "role") String role, @RequestBody Object request)
+			throws UserNotFoundException, DepartmentNotFoundException {
 
-	@PutMapping("api/students/")
-	public CustomResponseEntity<Student> updateStudent(@RequestBody StudentDTO studentDTO)
-			throws UserNotFoundException {
-		return new CustomResponseEntity<>(studentService.setStudent(studentDTO),
-				HttpStatus.OK);
-	}
+		switch (role) {
+		case "department_manager":
+			DepartmentManager dm = (DepartmentManager) request;
+			departmentManagerService.setDepartmentManager(dm.getDepartmentId(),
+					dm.getUserId());
+			break;
+		case "instructor":
+			InstructorDTO i = (InstructorDTO) request;
+			instructorService.setInstructor(i);
+			break;
+		case "student":
+			StudentDTO s = (StudentDTO) request;
+			studentService.setStudent(s);
+			break;
+		default:
+			UserDTO u = (UserDTO) request;
+			userService.setUser(u);
+		}
 
-	@PutMapping("api/users/")
-	public CustomResponseEntity<User> updateUser(@RequestBody UserDTO user)
-			throws UserNotFoundException {
-		return new CustomResponseEntity<>(userService.setUser(user), HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@PutMapping("api/psw/{userId}/")
-	public CustomResponseEntity<String> updateUserPassword(
+	public ResponseEntity<String> updateUserPassword(
 			@PathVariable(name = "userId") String userId) throws UserNotFoundException {
 
 		userService.setUserPassword(userId);
-		return new CustomResponseEntity<>("Password changed successfully", HttpStatus.OK);
-	}
-
-	@DeleteMapping("api/admins/{userId}")
-	public ResponseEntity<Object> deleteAdmin(
-			@PathVariable(name = "userId") String userId) throws AdminNotFoundException {
-		adminService.removeAdmin(userId);
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
 	}
 
 	@DeleteMapping("api/departments/{departmentId}/")
 	public ResponseEntity<Object> deleteDepartment(
 			@PathVariable(name = "departmentId") Integer departmentId)
-			throws StudentNotFoundException, InstructorNotFoundException,
-			DepartmentNotFoundException {
+			throws DepartmentNotFoundException {
 		departmentService.removeDepartment(departmentId);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@DeleteMapping("api/department_managers/{instructorId}/")
-	public ResponseEntity<Object> deleteDepartmentManager(
-			@PathVariable(name = "instructorId") String instructorId) {
-		departmentManagerService.removeDepartmentManager(instructorId);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
-
-	@DeleteMapping("api/instructors/{userId}")
-	public ResponseEntity<Object> deleteInstructor(
-			@PathVariable(name = "userId") String userId)
-			throws InstructorNotFoundException, DepartmentNotFoundException {
-		instructorService.removeInstructorById(userId);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
-
-	@DeleteMapping("api/students/{userId}")
-	public ResponseEntity<Object> deleteStudent(
-			@PathVariable(name = "userId") String userId)
-			throws StudentNotFoundException {
-		studentService.removeStudentById(userId);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
-
 	@DeleteMapping("api/users/{userId}")
-	public ResponseEntity<Object> deleteUser(
-			@PathVariable(name = "userId") String userId) {
+	public ResponseEntity<Object> deleteUser(@PathVariable(name = "userId") String userId)
+			throws UserNotFoundException, DepartmentNotFoundException {
 		userService.removeUserById(userId);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

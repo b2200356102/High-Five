@@ -16,8 +16,6 @@ import com.highfive.authservice.entity.QStudent;
 import com.highfive.authservice.entity.Student;
 import com.highfive.authservice.repository.DepartmentRepository;
 import com.highfive.authservice.utils.exception.DepartmentNotFoundException;
-import com.highfive.authservice.utils.exception.InstructorNotFoundException;
-import com.highfive.authservice.utils.exception.StudentNotFoundException;
 import com.querydsl.jpa.impl.JPAQuery;
 
 import jakarta.persistence.EntityManager;
@@ -36,7 +34,8 @@ public class DepartmentService {
 	private InstructorService instructorService;
 	private QInstructor instructor = QInstructor.instructor;
 
-	@Autowired
+	@Inject
+	@Lazy
 	private StudentService studentService;
 	private QStudent student = QStudent.student;
 
@@ -71,8 +70,7 @@ public class DepartmentService {
 	}
 
 	@Transactional
-	public void removeDepartment(Integer id) throws StudentNotFoundException,
-			InstructorNotFoundException, DepartmentNotFoundException {
+	public void removeDepartment(Integer id) throws DepartmentNotFoundException {
 
 		JPAQuery<Student> studentQuery = new JPAQuery<>(em);
 		List<Student> students = studentQuery.select(student).from(student)

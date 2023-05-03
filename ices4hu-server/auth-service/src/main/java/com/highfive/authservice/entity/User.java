@@ -36,6 +36,9 @@ public class User implements Serializable {
 	@Length(min = 10, max = 20, message = "USER ID MUST BE BETWEEN 10-20 CHARACTERS")
 	private String password;
 
+	@Column(name = "ROLE", nullable = false, length = 20)
+	private String role;
+
 	@Column(name = "PENDING", nullable = false)
 	private Boolean pending;
 
@@ -43,12 +46,14 @@ public class User implements Serializable {
 		super();
 	}
 
-	public User(String id, String name, String mail, String password, Boolean pending) {
+	public User(String id, String name, String mail, String password, String role,
+			Boolean pending) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.mail = mail;
 		this.password = password;
+		this.role = role;
 		this.pending = pending;
 	}
 
@@ -82,6 +87,14 @@ public class User implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	public Boolean getPending() {

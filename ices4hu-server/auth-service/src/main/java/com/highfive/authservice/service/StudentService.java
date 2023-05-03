@@ -20,7 +20,6 @@ import com.highfive.authservice.entity.dto.StudentDTO;
 import com.highfive.authservice.entity.dto.UserDTO;
 import com.highfive.authservice.repository.StudentRepository;
 import com.highfive.authservice.utils.exception.DepartmentNotFoundException;
-import com.highfive.authservice.utils.exception.StudentNotFoundException;
 import com.highfive.authservice.utils.exception.UserNotFoundException;
 import com.querydsl.jpa.impl.JPAQuery;
 
@@ -49,7 +48,6 @@ public class StudentService {
 
 	@Transactional
 	public Student addStudent(User user, Integer departmentId) {
-		userService.addUser(user);
 		Student newStudent = new Student(user.getId(), departmentId, (short) 1, true,
 				false);
 		return repository.save(newStudent);
@@ -75,17 +73,17 @@ public class StudentService {
 				.innerJoin(department).on(student.departmentId.eq(department.id)).fetch();
 	}
 
-	public Student getStudentById(String userId) throws StudentNotFoundException {
+	public Student getStudentById(String userId) throws UserNotFoundException {
 		JPAQuery<Student> query = new JPAQuery<>(em);
 		Student studentResponse = query.select(student).from(student).innerJoin(user)
 				.on(student.userId.eq(user.id).and(user.id.eq(userId))).fetchFirst();
 		if (studentResponse == null)
-			throw new StudentNotFoundException();
+			throw new UserNotFoundException();
 		return studentResponse;
 	}
 
-	public StudentDTO getStudentDTOById(String userId) throws StudentNotFoundException,
-			UserNotFoundException, DepartmentNotFoundException {
+	public StudentDTO getStudentDTOById(String userId)
+			throws UserNotFoundException, DepartmentNotFoundException {
 
 		User user = userService.getUserById(userId);
 		Student student = getStudentById(userId);
@@ -118,9 +116,8 @@ public class StudentService {
 	}
 
 	@Transactional
-	public void removeStudentById(String userId) throws StudentNotFoundException {
+	public void removeStudentById(String userId) {
 		repository.deleteById(userId);
-		userService.removeUserById(userId);
 	}
 
 }
