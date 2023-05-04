@@ -28,3 +28,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+Frontend/package-lock.json
+Backend/auth-service/src/main/resources/application.properties
+Backend/enrollment-service/enrollment-service.iml
+Backend/auth-service/auth-service.iml
