@@ -11,13 +11,13 @@ const SenaApp = () => {
   }
 
   return (
-    <div className="sena-app">
+    <div class="sena-app">
       <div clasName="form">
       {
         currentForm === "login" ? <Login onFormSwitch={toggleForm} /> : <SignUp onFormSwitch={toggleForm} />
       }
       </div>
-      <div className="background">
+      <div class="background">
         <img src={require('../image.png')} alt="triangle"/>
       </div>
     </div>

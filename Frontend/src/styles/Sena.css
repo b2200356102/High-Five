@@ -12,8 +12,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  background: #FFFBF5;
-  height: 600px;
+  
 }
 
 .form, .background{
@@ -26,7 +25,7 @@ header{
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
-  margin: 10px 0px;
+  margin: 100px 0px;
 }
 
 .page-title, .page-button{
@@ -38,7 +37,7 @@ header{
   color: #674188;
 }
 
-button{
+.button{
   border: none;
   cursor: pointer;
 }
@@ -59,8 +58,8 @@ button{
   margin: 0px 200px;
 }
 
-form{
-  width: 500px;
+.form{
+  width: 5px;
 }
 
 .user-class{
