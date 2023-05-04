@@ -15,9 +15,7 @@ import com.highfive.authservice.entity.QUser;
 import com.highfive.authservice.entity.Student;
 import com.highfive.authservice.entity.User;
 import com.highfive.authservice.entity.dto.QStudentDTO;
-import com.highfive.authservice.entity.dto.QUserDTO;
 import com.highfive.authservice.entity.dto.StudentDTO;
-import com.highfive.authservice.entity.dto.UserDTO;
 import com.highfive.authservice.repository.StudentRepository;
 import com.highfive.authservice.utils.exception.DepartmentNotFoundException;
 import com.highfive.authservice.utils.exception.UserNotFoundException;
@@ -59,15 +57,10 @@ public class StudentService {
 
 	public List<StudentDTO> getStudentDTOs() {
 
-		JPAQuery<UserDTO> subQuery = new JPAQuery<>(em);
-		subQuery = subQuery
-				.select(new QUserDTO(user.id, user.name, user.mail, user.pending))
-				.from(user);
-
 		JPAQuery<StudentDTO> query = new JPAQuery<>(em);
 
 		return query
-				.select(new QStudentDTO(subQuery, department, student.semester,
+				.select(new QStudentDTO(user, department, student.semester,
 						student.undergrad, student.banned))
 				.from(student).innerJoin(user).on(student.userId.eq(user.id))
 				.innerJoin(department).on(student.departmentId.eq(department.id)).fetch();
@@ -90,7 +83,7 @@ public class StudentService {
 		Department department = departmentService
 				.getDepartmentById(student.getDepartmentId());
 
-		return new StudentDTO(user.toUserDTO(), department, student.getSemester(),
+		return new StudentDTO(user, department, student.getSemester(),
 				student.getUndergrad(), student.getBanned());
 	}
 

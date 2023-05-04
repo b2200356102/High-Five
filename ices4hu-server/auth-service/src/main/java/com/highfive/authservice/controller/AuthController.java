@@ -153,8 +153,8 @@ public class AuthController {
 	}
 
 	@PutMapping("api/users/{role}/")
-	public ResponseEntity<Object> updateDepartmentManager(
-			@PathVariable(name = "role") String role, @RequestBody Object request)
+	public ResponseEntity<Object> updateUsers(@PathVariable(name = "role") String role,
+			@RequestBody Object request)
 			throws UserNotFoundException, DepartmentNotFoundException {
 
 		switch (role) {
@@ -180,7 +180,7 @@ public class AuthController {
 	}
 
 	@PutMapping("api/psw/{userId}/")
-	public ResponseEntity<String> updateUserPassword(
+	public ResponseEntity<String> updatePassword(
 			@PathVariable(name = "userId") String userId) throws UserNotFoundException {
 
 		userService.setUserPassword(userId);

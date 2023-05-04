@@ -13,7 +13,7 @@ public class PasswordManager {
 
 	public static boolean match(String dbPassword, String password) {
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		return encoder.matches(dbPassword, password);
+		return encoder.matches(password, dbPassword);
 	}
 
 	public static String generateNewPassword() {

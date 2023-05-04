@@ -16,8 +16,6 @@ import com.highfive.authservice.entity.QUser;
 import com.highfive.authservice.entity.User;
 import com.highfive.authservice.entity.dto.InstructorDTO;
 import com.highfive.authservice.entity.dto.QInstructorDTO;
-import com.highfive.authservice.entity.dto.QUserDTO;
-import com.highfive.authservice.entity.dto.UserDTO;
 import com.highfive.authservice.repository.InstructorRepository;
 import com.highfive.authservice.utils.exception.DepartmentNotFoundException;
 import com.highfive.authservice.utils.exception.UserNotFoundException;
@@ -62,14 +60,9 @@ public class InstructorService {
 
 	public List<InstructorDTO> getInstructorDTOs() {
 
-		JPAQuery<UserDTO> userQuery = new JPAQuery<>(em);
-		userQuery = userQuery
-				.select(new QUserDTO(user.id, user.name, user.mail, user.pending))
-				.from(user);
-
 		JPAQuery<InstructorDTO> query = new JPAQuery<>(em);
 
-		return query.select(new QInstructorDTO(userQuery, department, instructor.score))
+		return query.select(new QInstructorDTO(user, department, instructor.score))
 				.from(instructor).innerJoin(user).on(instructor.userId.eq(user.id))
 				.innerJoin(department).on(instructor.departmentId.eq(department.id))
 				.fetch();
@@ -99,7 +92,7 @@ public class InstructorService {
 		if (department == null)
 			throw new DepartmentNotFoundException();
 
-		return new InstructorDTO(user.toUserDTO(), department, instructor.getScore());
+		return new InstructorDTO(user, department, instructor.getScore());
 	}
 
 	@Transactional

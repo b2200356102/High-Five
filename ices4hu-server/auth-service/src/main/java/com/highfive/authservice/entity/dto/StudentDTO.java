@@ -1,6 +1,7 @@
 package com.highfive.authservice.entity.dto;
 
 import com.highfive.authservice.entity.Department;
+import com.highfive.authservice.entity.User;
 import com.querydsl.core.annotations.QueryProjection;
 
 public class StudentDTO {
@@ -12,10 +13,10 @@ public class StudentDTO {
 	private Boolean banned;
 
 	@QueryProjection
-	public StudentDTO(UserDTO userDTO, Department department, Short semester,
-			Boolean undergrad, Boolean banned) {
+	public StudentDTO(User user, Department department, Short semester, Boolean undergrad,
+			Boolean banned) {
 		super();
-		this.userDTO = userDTO;
+		this.userDTO = user.toUserDTO();
 		this.department = department;
 		this.semester = semester;
 		this.undergrad = undergrad;

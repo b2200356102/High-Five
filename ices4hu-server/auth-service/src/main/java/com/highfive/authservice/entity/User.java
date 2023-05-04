@@ -32,8 +32,8 @@ public class User implements Serializable {
 	@Email(message = "INVALID MAIL ADDRESS")
 	private String mail;
 
-	@Column(name = "PASSWORD", nullable = false, length = 20)
-	@Length(min = 10, max = 20, message = "USER ID MUST BE BETWEEN 10-20 CHARACTERS")
+	@Column(name = "PASSWORD", nullable = false, length = 72)
+	@Length(min = 10, max = 72, message = "PASSWORD MUST BE BETWEEN 10-72 CHARACTERS")
 	private String password;
 
 	@Column(name = "ROLE", nullable = false, length = 20)

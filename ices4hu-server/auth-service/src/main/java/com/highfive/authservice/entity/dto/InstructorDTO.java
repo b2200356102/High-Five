@@ -1,6 +1,7 @@
 package com.highfive.authservice.entity.dto;
 
 import com.highfive.authservice.entity.Department;
+import com.highfive.authservice.entity.User;
 import com.querydsl.core.annotations.QueryProjection;
 
 public class InstructorDTO {
@@ -10,9 +11,9 @@ public class InstructorDTO {
 	private Double score;
 
 	@QueryProjection
-	public InstructorDTO(UserDTO userDTO, Department department, Double score) {
+	public InstructorDTO(User user, Department department, Double score) {
 		super();
-		this.userDTO = userDTO;
+		this.userDTO = user.toUserDTO();
 		this.department = department;
 		this.score = score;
 	}
