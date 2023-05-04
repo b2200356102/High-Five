@@ -44,7 +44,7 @@ public class DepartmentManagerService {
 			String instructorId) {
 		DepartmentManager departmentManager = getDepartmentManagerByDepartmentId(
 				departmentId);
-		departmentManager.setUserId(instructorId);
+		departmentManager.setInstructorId(instructorId);
 		return repository.save(departmentManager);
 	}
 

@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.highfive.authservice.entity.Department;
 import com.highfive.authservice.entity.DepartmentManager;
 import com.highfive.authservice.entity.User;
@@ -153,30 +157,37 @@ public class AuthController {
 	}
 
 	@PutMapping("api/users/{role}/")
-	public ResponseEntity<Object> updateUsers(@PathVariable(name = "role") String role,
-			@RequestBody Object request)
-			throws UserNotFoundException, DepartmentNotFoundException {
+	public ResponseEntity<String> updateUsers(@PathVariable(name = "role") String role,
+			@RequestBody String request) throws UserNotFoundException,
+			DepartmentNotFoundException, JsonMappingException, JsonProcessingException {
+
+		ObjectMapper om = new ObjectMapper();
 
 		switch (role) {
 		case "department_manager":
-			DepartmentManager dm = (DepartmentManager) request;
+			DepartmentManager dm = om.readValue(request,
+					new TypeReference<DepartmentManager>() {
+					});
 			departmentManagerService.setDepartmentManager(dm.getDepartmentId(),
-					dm.getUserId());
+					dm.getInstructorId());
 			break;
 		case "instructor":
-			InstructorDTO i = (InstructorDTO) request;
+			InstructorDTO i = om.readValue(request, new TypeReference<InstructorDTO>() {
+			});
 			instructorService.setInstructor(i);
 			break;
 		case "student":
-			StudentDTO s = (StudentDTO) request;
+			StudentDTO s = om.readValue(request, new TypeReference<StudentDTO>() {
+			});
 			studentService.setStudent(s);
 			break;
 		default:
-			UserDTO u = (UserDTO) request;
+			UserDTO u = om.readValue(request, new TypeReference<UserDTO>() {
+			});
 			userService.setUser(u);
 		}
 
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>("Success", HttpStatus.OK);
 	}
 
 	@PutMapping("api/psw/{userId}/")

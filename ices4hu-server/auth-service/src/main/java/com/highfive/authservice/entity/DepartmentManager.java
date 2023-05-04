@@ -31,10 +31,10 @@ public class DepartmentManager {
 		super();
 	}
 
-	public DepartmentManager(Integer id, String userId, Integer departmentId) {
+	public DepartmentManager(Integer id, String instructorId, Integer departmentId) {
 		super();
 		this.id = id;
-		this.instructorId = userId;
+		this.instructorId = instructorId;
 		this.departmentId = departmentId;
 	}
 
@@ -46,12 +46,12 @@ public class DepartmentManager {
 		this.id = id;
 	}
 
-	public String getUserId() {
+	public String getInstructorId() {
 		return instructorId;
 	}
 
-	public void setUserId(String userId) {
-		this.instructorId = userId;
+	public void setInstructorId(String instructorId) {
+		this.instructorId = instructorId;
 	}
 
 	public Integer getDepartmentId() {
