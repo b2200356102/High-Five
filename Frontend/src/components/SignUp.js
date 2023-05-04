@@ -9,8 +9,6 @@ const SignUp = (props) => {
     email: "",
   });
 
-  const [checkedValue, setValue] = useState(true);
-
   const inputs = [
     {
       id: 1,
@@ -18,7 +16,6 @@ const SignUp = (props) => {
       type: "text",
       label: "Name:",
       errorMessage: "Pleace fill this section.",
-      pattern: "^[A-Za-z]{1,50}$",
       required: true,
     },
     {
@@ -27,7 +24,6 @@ const SignUp = (props) => {
       type: "text",
       label: "Surname:",
       errorMessage: "Pleace fill this section.",
-      pattern: "^[A-Za-z]{1,50}$",
       required: true,
     },
     {
@@ -36,7 +32,6 @@ const SignUp = (props) => {
       type: "text",
       label: "ID:",
       errorMessage: "Pleace fill this section.",
-      pattern: "^[0-9]{1,20}$",
       required: true,
     },
     {
@@ -57,12 +52,6 @@ const SignUp = (props) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
-  const handleChange = (e) => {
-    const {value, checked} = e.target
-    if(checked){setValue(value)}
-  };
-  console.log(checkedValue)
-
   return (
     <div className="sign-up">
       <header>
@@ -78,9 +67,13 @@ const SignUp = (props) => {
             onChange={onChange}
           />
         ))}
-        <div className="user-class">
-          <div><input type="checkbox" value="student" onChange={handleChange} /><p className="checkbox">Student</p></div> 
-          <div><input type="checkbox" value="departmentManager" onChange={handleChange} /><p className="checkbox">Department Manager</p></div> 
+        <div className="user-type-radio">
+          <div className="user-type-input">
+            <input type="radio" name="userType" value="student" required onChange={onChange}/> Student
+          </div>
+          <div className="user-type-input">
+            <input type="radio" name="userType"  value="departmenManager" onChange={onChange}/> Department Manager
+          </div>
         </div>
       </form>
       <button className="submit-button">SIGN UP</button>
