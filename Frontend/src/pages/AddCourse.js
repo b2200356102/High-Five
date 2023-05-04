@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import "../styles/AddCourse.css";
 
 function AddCourse() {
-    const [courseId, setCourseId] = useState("");
-    const [courseName, setCourseName] = useState("");
-    const [department, setDepartment] = useState("");
+    const [courseCode, setCourseId] = useState("");
+    const [name, setCourseName] = useState("");
+    const [departmentName, setDepartment] = useState("");
     const [credit, setCredit] = useState("");
-    const [capacity, setCapacity] = useState("");
-    const [courseType, setCourseType] = useState("");
-    const [education, setEducation] = useState("");
+    const [courseCapacity, setCapacity] = useState("");
+    const [type, setCourseType] = useState("");
+    const [underGradStatus, setEducation] = useState("");
 
     const handleCourseIdChange = (e) => {
         setCourseId(e.target.value);
@@ -41,30 +41,33 @@ function AddCourse() {
 
     const handleButtonClick = () => {
 
-        const data = { courseId, courseName, department, credit,capacity, courseType, education };
-        /*
-        fetch('/api/courses', {
+        
+        let isUndergrad = (underGradStatus === "Undergraduate");
+        let status = "On";
+        let numberOfStudents = 0;
+
+ 
+        const data = { courseCode, name, departmentName, credit, courseCapacity, type,  isUndergrad, status, numberOfStudents};
+        
+        
+
+
+        fetch('http://localhost:8081/api/courses', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Accept': 'application/json','Content-Type': 'application/json','Transfer-Encoding': 'chunked'},
           body: JSON.stringify(data)
         })
-        .then(response => {
-          if (response.ok) {
-            console.log('Course added successfully');
-          } else {
-            console.error('Error adding course');
-          }
+        .then(response => response.json()).then(a => {
+            console.log(a);
         })
-        .catch(error => {
-          console.error('Error adding course', error);
-        });*/
+        
 
-        console.log("Course ID - Course Name: ", courseId, " - ", courseName);
-        console.log("Department: ", department);
+        /*console.log("Course ID - Course Name: ", courseCode, " - ", name);
+        console.log("Department: ", departmentName);
         console.log("Credit: ", credit);
-        console.log("Capacity: ", capacity);
-        console.log("Course Type: ", courseType);
-        console.log("Education: ", education);
+        console.log("Capacity: ", courseCapacity);
+        console.log("Course Type: ", type);
+        console.log("Education: ", isUndergrad);*/
     };
 
     return (
@@ -75,7 +78,7 @@ function AddCourse() {
                     <p className='mainText'>Course ID:</p>
                     <div className='fieldrectangle'>
                         {/* Text field for Course ID - Course Name */}
-                        <input type="text" id="courseid" value={courseId} onChange={handleCourseIdChange} />
+                        <input type="text" id="courseCode" value={courseCode} onChange={handleCourseIdChange} />
                     </div>
                 </div>
 
@@ -83,7 +86,7 @@ function AddCourse() {
                     <p className='mainText'>Course Name:</p>
                     <div className='fieldrectangle'>
                         {/* Text field for Course ID - Course Name */}
-                        <input type="text" id="coursename" value={courseName} onChange={handleCourseNameChange} />
+                        <input type="text" id="name" value={name} onChange={handleCourseNameChange} />
                     </div>
                 </div>
 
@@ -91,7 +94,7 @@ function AddCourse() {
                     <p className='mainText'>Department:</p>
                     <div className='fieldrectangle'>
                         {/* Text field for Department */}
-                        <input type="text" id="department" value={department} onChange={handleDepartmentChange} />
+                        <input type="text" id="departmentName" value={departmentName} onChange={handleDepartmentChange} />
                     </div>
                 </div>
 
@@ -107,7 +110,7 @@ function AddCourse() {
                     <p className='mainText'>Course Capacity:</p>
                     <div className='fieldrectangle'>
                         {/* Text field for Credit */}
-                        <input type="text" id="capacity" value={capacity} onChange={handleCapacityChange} />
+                        <input type="text" id="courseCapacity" value={courseCapacity} onChange={handleCapacityChange} />
                     </div>
                 </div>
 
@@ -117,11 +120,11 @@ function AddCourse() {
                         {/* Radio buttons for Course Type */}
                         <div class="rowradio">
                             <label className="radio-label" class="columnradio">
-                                <input class="radio-position" type="radio" name="courseType" value="Mandatory" checked={courseType === "Mandatory"} onChange={handleCourseTypeChange} />
+                                <input class="radio-position" type="radio" name="type" value="Mandatory" checked={type === "Mandatory"} onChange={handleCourseTypeChange} />
                                Mandatory
                             </label>
                             <label className="radio-label" class="columnradio">
-                                <input class="radio-position" type="radio" name="courseType" value="Elective" checked={courseType === "Elective"} onChange={handleCourseTypeChange} /> Elective
+                                <input class="radio-position" type="radio" name="type" value="Elective" checked={type === "Elective"} onChange={handleCourseTypeChange} /> Elective
                             </label>
                         </div>
                     </div>
@@ -133,11 +136,11 @@ function AddCourse() {
                         {/* Radio buttons for Education */}
                         <div class="rowradio">
                             <label className="radio-label" class="columnradio">
-                                <input class="radio-position" type="radio" name="education" value="Undergraduate" checked={education === "Undergraduate"} onChange={handleEducationChange} />
+                                <input class="radio-position" type="radio" name="underGradStatus" value="Undergraduate" checked={underGradStatus === "Undergraduate"} onChange={handleEducationChange} />
                                 Undergraduate
                             </label>
                             <label className="radio-label" class="columnradio">
-                                <input class="radio-position" type="radio" name="education" value="Graduate" checked={education === "Graduate"} onChange={handleEducationChange} />
+                                <input class="radio-position" type="radio" name="underGradStatus" value="Graduate" checked={underGradStatus === "Graduate"} onChange={handleEducationChange} />
                                 Graduate
                             </label>
                         </div>
