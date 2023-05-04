@@ -139,12 +139,7 @@
       border-radius: 4px;
       box-shadow: rgba(60, 66, 87, 0.12) 0px 7px 14px 0px, rgba(0, 0, 0, 0.12) 0px 3px 6px 0px;
   }
-  span {
-      display: block;
-      font-size: 20px;
-      line-height: 28px;
-      color: #1a1f36;
-  }
+  
   label {
       margin-bottom: 10px;
   }
@@ -204,6 +199,10 @@
       color: #fff;
       font-weight: 600;
       cursor: pointer;
+  }
+
+  .imgtext{
+    font-size: 14px;
   }
   .field-checkbox input {
       width: 20px;
@@ -268,16 +267,20 @@
       transform: translateX(0px);
     }
   } 
+  .warningtext{
+    font-size: 14px;
+    color: red;
+    padding: 5px;
+  }
   .button1 {
     background-color: #C3ACD0;
-/* color: rgb(224, 147, 147); */
+
     border: 2px solid #C3ACD0;
     border-radius: 8px;
     width: 100%;
   }
-  .button2 {
-  
-    font-size: 12px;
+  .show-password-button {
+    font-size: 14px;
     border: 2px solid #C3ACD0;
     border-radius: 8px;
     width: 100%;

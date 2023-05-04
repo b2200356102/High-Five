@@ -10,7 +10,22 @@
     margin-top: 5%;
     
 }
-
+.columnradio {
+    float: left;
+    width: 25%;
+    
+  }
+  .rowradio:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  .radio-position{
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right:5px;
+    padding: 7px;
+  }
 .rectangle {
     background-color: #674188;
     /* Set the background color of the rectangle */
@@ -117,18 +132,15 @@ input[type="radio"]:checked {
 .mainText {
     color: #674188;
     font-weight: bolder;
-    font-size: x-large;
+    font-size: 20px;
     margin: 0.2rem 0;
     /* Sets margin to 0.5rem from top and bottom */
 }
-
-
 
 .buttonContainer {
     position: relative;
     top: 20px;
     left: 40%;
-
 }
 
 .myButton {
@@ -140,6 +152,8 @@ input[type="radio"]:checked {
     display: flow-root;
     font-size: xx-large;
     width: 130%;
+    margin-bottom: 20px;
+
 
 }
 

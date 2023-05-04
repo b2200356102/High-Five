@@ -1,5 +1,4 @@
 import React from "react";
-import "./App.css";
 import NavBar from './components/NavBar'
 import AddCourse from "./pages/AddCourse";
 import AddInstructor from "./pages/AddInstructor";
@@ -16,7 +15,7 @@ function App() {
         <NavBar />
 
         <Routes>
-          <Route path="/" exact Component={Home} />
+          <Route path="/home" exact Component={Home} />
           <Route path="/addcourse" exact Component={AddCourse} />
           <Route path="/addinstructor" exact Component={AddInstructor} />
           <Route path="/profile" exact Component={Profile} />

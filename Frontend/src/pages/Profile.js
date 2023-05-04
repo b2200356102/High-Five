@@ -6,6 +6,9 @@ function Profile() {
   const [username, setUsername] = useState("");
   const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
+  const [departmentName, setDepartment] = useState("");
+  const [role, setRole] = useState("");
+  const [status, setStatus] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordMatch, setPasswordMatch] = useState(true);
@@ -22,7 +25,7 @@ function Profile() {
   const [showPassword, setShowPassword] = useState(false);
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Şifrelerin eşleştiğini ve uzunluğunun yeterli olduğunu kontrol
+    // Şifrelerin eşleştiğini ve uzunluğunun yeterli olduğunu kontrol et
     if (newPassword !== confirmPassword) {
       setPasswordMatch(false);
     } else {
@@ -48,7 +51,7 @@ function Profile() {
 
       <div class="login-root">
    
-      <div class="loginbackground padding-top--64 flexgrow">
+      {/* <div class="loginbackground padding-top--64 flexgrow">
         <div class="loginbackground-gridContainer">
           <div class="box-root flex-flex gridzero">
             <div class="box-root backimg flexgrow" >
@@ -79,7 +82,7 @@ function Profile() {
             <div class="box-root box-divider--light-all-2 animationRightLeft tans3s flexgrow" ></div>
           </div>
         </div>
-      </div>
+      </div>*/ }
       <div class="box-root padding-top--24 flex-flex flex-direction--column zindex flexgrow" >
       <div class="formbg-outer">
           <div class="formbg">
@@ -88,6 +91,7 @@ function Profile() {
         <div className="form-group">
           <label htmlFor="newProfilePic">Profile Picture:</label>
           <input
+            class="imgtext"
             type="file"
             id="newProfilePic"
             accept="image/*"
@@ -122,6 +126,33 @@ function Profile() {
           />
         </div>
         <div class="field padding-bottom--24">
+          <label htmlFor="departmentName">Department:</label>
+          <input
+            type="departmentName"
+            id="departmentName"
+            value={departmentName}
+            onChange={(e) => setDepartment(e.target.value)}
+          />
+        </div>
+        <div class="field padding-bottom--24">
+          <label htmlFor="role">Role:</label>
+          <input
+            type="role"
+            id="role"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+          />
+        </div>
+        <div class="field padding-bottom--24">
+          <label htmlFor="status">Status:</label>
+          <input
+            type="status"
+            id="status"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+          />
+        </div>
+        <div class="field padding-bottom--24">
           <label htmlFor="new-password">New Password:</label>
           <input
             //type="password"
@@ -131,10 +162,10 @@ function Profile() {
             onChange={handleNewPasswordChange}
           />
           <button
-          class="button2"
+          
           type="button"
           onClick={() => setShowPassword(!showPassword)}
-          className="show-password-btn"
+          class="show-password-button"
         >
           {showPassword ? "Hide Password" : "Show Password"}
         </button>
@@ -151,10 +182,10 @@ function Profile() {
           />
         </div>
         {!passwordMatch && (
-          <p style={{ color: "red" }}>Passwords do not match</p>
+          <p class="warningtext">Passwords do not match</p>
         )}
         {!passwordLength && (
-          <p style={{ color: "red" }}>
+          <p class="warningtext">
             Password must be at least 6 characters
           </p>
         )}
@@ -163,7 +194,13 @@ function Profile() {
       
         
       </form>
-      </div></div></div></div></div></div>
+      </div></div></div></div>
+      <div class="background">
+        <img src={require('../image.png')} alt="triangle"/>
+      </div>
+      </div>
+      
+      </div>
     </body>
     </section>
   </>

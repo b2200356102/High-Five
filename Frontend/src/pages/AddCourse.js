@@ -65,12 +65,13 @@ function AddCourse() {
                     <p className='mainText'>Course Type:</p>
                     <div className='fieldrectangle'>
                         {/* Radio buttons for Course Type */}
-                        <div>
-                            <label className="radio-label">
-                                <input type="radio" name="courseType" value="Mandatory" checked={courseType === "Mandatory"} onChange={handleCourseTypeChange} /> Mandatory
+                        <div class="rowradio">
+                            <label className="radio-label" class="columnradio">
+                                <input class="radio-position" type="radio" name="courseType" value="Mandatory" checked={courseType === "Mandatory"} onChange={handleCourseTypeChange} />
+                               Mandatory
                             </label>
-                            <label className="radio-label">
-                                <input type="radio" name="courseType" value="Elective" checked={courseType === "Elective"} onChange={handleCourseTypeChange} /> Elective
+                            <label className="radio-label" class="columnradio">
+                                <input class="radio-position" type="radio" name="courseType" value="Elective" checked={courseType === "Elective"} onChange={handleCourseTypeChange} /> Elective
                             </label>
                         </div>
                     </div>
@@ -80,13 +81,13 @@ function AddCourse() {
                     <p className='mainText'>Education:</p>
                     <div className='fieldrectangle'>
                         {/* Radio buttons for Education */}
-                        <div>
-                            <label className="radio-label">
-                                <input type="radio" name="education" value="Undergraduate" checked={education === "Undergraduate"} onChange={handleEducationChange} />
+                        <div class="rowradio">
+                            <label className="radio-label" class="columnradio">
+                                <input class="radio-position" type="radio" name="education" value="Undergraduate" checked={education === "Undergraduate"} onChange={handleEducationChange} />
                                 Undergraduate
                             </label>
-                            <label className="radio-label">
-                                <input type="radio" name="education" value="Graduate" checked={education === "Graduate"} onChange={handleEducationChange} />
+                            <label className="radio-label" class="columnradio">
+                                <input class="radio-position" type="radio" name="education" value="Graduate" checked={education === "Graduate"} onChange={handleEducationChange} />
                                 Graduate
                             </label>
                         </div>
