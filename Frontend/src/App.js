@@ -5,7 +5,7 @@ import AddInstructor from './pages/AddInstructor';
 import Profile from './pages/Profile';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Home from './pages/Home';
-import SenaApp from './pages/SenaApp';
+import Log from './pages/Log';
 
 function App() {
   return (
@@ -26,8 +26,8 @@ function App() {
           <Route path="/profile" component={Profile} exact>
             <Profile />
           </Route>
-          <Route path="/log" component={SenaApp} exact>
-            <SenaApp />
+          <Route path="/log" component={Log} exact>
+            <Log />
           </Route>
         </Switch>
       </Router>

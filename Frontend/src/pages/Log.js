@@ -1,9 +1,9 @@
 import { useState } from "react";
 import SignUp from "../components/SignUp";
 import Login from "../components/Login";
-import "../styles/Sena.css";
+import "../styles/Log.css";
 
-const SenaApp = () => {
+const Log = () => {
   const [currentForm, setCurrentForm] = useState('login');
 
   const toggleForm = (formName) => {
@@ -11,7 +11,7 @@ const SenaApp = () => {
   }
 
   return (
-    <div class="sena-app">
+    <div class="log">
       <div clasName="form">
       {
         currentForm === "login" ? <Login onFormSwitch={toggleForm} /> : <SignUp onFormSwitch={toggleForm} />
@@ -24,4 +24,4 @@ const SenaApp = () => {
   );
 }
  
-export default SenaApp;
+export default Log;

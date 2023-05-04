@@ -16,7 +16,6 @@ const Login = (props) => {
       type: "text",
       label: "User ID:",
       errorMessage: "Pleace fill this section.",
-      pattern: "^[0-9]{1,20}$",
       required: true,
     },
     {

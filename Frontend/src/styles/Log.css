@@ -7,7 +7,7 @@
   font-size: 24px;
 }
 
-.sena-app{
+.log{
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -62,13 +62,14 @@ header{
   width: 5px;
 }
 
-.user-class{
+.user-type-radio{
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
 }
 
-.checkbox{
+.user-type-input{
+  padding: 10px;
   display: inline;
   font-size: 18px;
   color: #674188;
