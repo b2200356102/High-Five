@@ -4,14 +4,14 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.highfive.authservice.entity.QLecturer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.highfive.authservice.entity.Department;
-import com.highfive.authservice.entity.Instructor;
+import com.highfive.authservice.entity.Lecturer;
 import com.highfive.authservice.entity.QDepartment;
-import com.highfive.authservice.entity.QInstructor;
 import com.highfive.authservice.entity.QUser;
 import com.highfive.authservice.entity.User;
 import com.highfive.authservice.entity.dto.InstructorDTO;
@@ -30,7 +30,7 @@ public class InstructorService {
 
 	@Autowired
 	private InstructorRepository repository;
-	private QInstructor instructor = QInstructor.instructor;
+	private QLecturer lecturer = QLecturer.lecturer;
 
 	@Inject
 	@Lazy
@@ -49,12 +49,12 @@ public class InstructorService {
 	@PersistenceContext
 	EntityManager em;
 
-	public Instructor addInstructor(User user, Integer departmentId) {
-		Instructor newInstructor = new Instructor(user.getId(), departmentId, 100.0);
-		return repository.save(newInstructor);
+	public Lecturer addInstructor(User user, Integer departmentId) {
+		Lecturer newLecturer = new Lecturer(user.getId(), departmentId, 100.0);
+		return repository.save(newLecturer);
 	}
 
-	public List<Instructor> getInstructors() {
+	public List<Lecturer> getInstructors() {
 		return repository.findAll();
 	}
 
@@ -62,21 +62,21 @@ public class InstructorService {
 
 		JPAQuery<InstructorDTO> query = new JPAQuery<>(em);
 
-		return query.select(new QInstructorDTO(user, department, instructor.score))
-				.from(instructor).innerJoin(user).on(instructor.userId.eq(user.id))
-				.innerJoin(department).on(instructor.departmentId.eq(department.id))
+		return query.select(new QInstructorDTO(user, department, lecturer.score))
+				.from(lecturer).innerJoin(user).on(lecturer.userId.eq(user.id))
+				.innerJoin(department).on(lecturer.departmentId.eq(department.id))
 				.fetch();
 
 	}
 
-	public Instructor getInstructorById(String userId) throws UserNotFoundException {
-		JPAQuery<Instructor> query = new JPAQuery<>(em);
-		Instructor instructorResponse = query.select(instructor).from(instructor)
-				.innerJoin(user).on(instructor.userId.eq(user.id).and(user.id.eq(userId)))
+	public Lecturer getInstructorById(String userId) throws UserNotFoundException {
+		JPAQuery<Lecturer> query = new JPAQuery<>(em);
+		Lecturer lecturerResponse = query.select(lecturer).from(lecturer)
+				.innerJoin(user).on(lecturer.userId.eq(user.id).and(user.id.eq(userId)))
 				.fetchFirst();
-		if (instructorResponse == null)
+		if (lecturerResponse == null)
 			throw new UserNotFoundException();
-		return instructorResponse;
+		return lecturerResponse;
 	}
 
 	public InstructorDTO getInstructorDTOById(String userId)
@@ -84,30 +84,30 @@ public class InstructorService {
 		User user = userService.getUserById(userId);
 		if (user == null)
 			throw new UserNotFoundException();
-		Instructor instructor = getInstructorById(userId);
-		if (instructor == null)
+		Lecturer lecturer = getInstructorById(userId);
+		if (lecturer == null)
 			throw new UserNotFoundException();
 		Department department = departmentService
-				.getDepartmentById(instructor.getDepartmentId());
+				.getDepartmentById(lecturer.getDepartmentId());
 		if (department == null)
 			throw new DepartmentNotFoundException();
 
-		return new InstructorDTO(user, department, instructor.getScore());
+		return new InstructorDTO(user, department, lecturer.getScore());
 	}
 
 	@Transactional
-	public Instructor setInstructor(InstructorDTO instructorDTO)
+	public Lecturer setInstructor(InstructorDTO instructorDTO)
 			throws UserNotFoundException, DepartmentNotFoundException {
-		Instructor newInstructor = getInstructorById(instructorDTO.getUserDTO().getId());
+		Lecturer newLecturer = getInstructorById(instructorDTO.getUserDTO().getId());
 
 		userService.setUser(instructorDTO.getUserDTO());
 
 		if (instructorDTO.getDepartment() != null)
-			newInstructor.setDepartmentId(instructorDTO.getDepartment().getId());
+			newLecturer.setDepartmentId(instructorDTO.getDepartment().getId());
 		if (instructorDTO.getScore() != null)
-			newInstructor.setScore(instructorDTO.getScore());
+			newLecturer.setScore(instructorDTO.getScore());
 
-		return repository.save(newInstructor);
+		return repository.save(newLecturer);
 	}
 
 	@Transactional

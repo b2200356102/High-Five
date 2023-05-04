@@ -4,14 +4,15 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.highfive.authservice.entity.QLecturer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.highfive.authservice.entity.Department;
-import com.highfive.authservice.entity.Instructor;
+import com.highfive.authservice.entity.Lecturer;
 import com.highfive.authservice.entity.QDepartment;
-import com.highfive.authservice.entity.QInstructor;
+
 import com.highfive.authservice.entity.QStudent;
 import com.highfive.authservice.entity.Student;
 import com.highfive.authservice.repository.DepartmentRepository;
@@ -32,7 +33,7 @@ public class DepartmentService {
 	@Inject
 	@Lazy
 	private InstructorService instructorService;
-	private QInstructor instructor = QInstructor.instructor;
+	private QLecturer lecturer = QLecturer.lecturer;
 
 	@Inject
 	@Lazy
@@ -77,14 +78,14 @@ public class DepartmentService {
 				.innerJoin(department).on(student.departmentId.eq(department.id))
 				.where(department.id.eq(id)).fetch();
 
-		JPAQuery<Instructor> instructorQuery = new JPAQuery<>(em);
-		List<Instructor> instructors = instructorQuery.select(instructor).from(instructor)
-				.innerJoin(department).on(instructor.departmentId.eq(department.id))
+		JPAQuery<Lecturer> instructorQuery = new JPAQuery<>(em);
+		List<Lecturer> lecturers = instructorQuery.select(lecturer).from(lecturer)
+				.innerJoin(department).on(lecturer.departmentId.eq(department.id))
 				.where(department.id.eq(id)).fetch();
 
 		for (Student s : students)
 			studentService.removeStudentById(s.getUserId());
-		for (Instructor i : instructors)
+		for (Lecturer i : lecturers)
 			instructorService.removeInstructorById(i.getUserId());
 		repository.deleteById(id);
 	}
