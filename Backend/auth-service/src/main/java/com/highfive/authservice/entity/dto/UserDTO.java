@@ -11,6 +11,11 @@ public class UserDTO {
 	private Boolean pending;
 
 	@QueryProjection
+	public UserDTO() {
+		super();
+	}
+
+	@QueryProjection
 	public UserDTO(String id, String name, String surname, String mail, Boolean pending) {
 		super();
 		this.id = id;

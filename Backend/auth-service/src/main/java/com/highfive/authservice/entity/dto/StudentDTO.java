@@ -13,6 +13,11 @@ public class StudentDTO {
 	private Boolean banned;
 
 	@QueryProjection
+	public StudentDTO() {
+		super();
+	}
+
+	@QueryProjection
 	public StudentDTO(User user, Department department, Short semester, Boolean undergrad,
 			Boolean banned) {
 		super();
