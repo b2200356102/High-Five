@@ -61,7 +61,7 @@ public class CourseServiceTests {
 	public void givenCourseObject_whenSaveCourse_thenReturnCourseObject() {
 
 		// given
-		CourseDTO courseDTO = new CourseDTO(null, course.getCourseCode(), course.getName(), course.getCredit(), course.getType(),course.getStatus(),course.getCourseCapacity(),course.getNumberOfStudents(), course.getIsUndergrad(), course.getDepartmentId());
+		CourseDTO courseDTO = new CourseDTO(null, course.getCourseCode(), course.getName(), course.getCredit(), course.getType(),course.getStatus(),course.getCourseCapacity(),course.getNumberOfStudents(), course.getIsUndergrad(), "Computer Engineering");
 
 
 		given(courseRepository.findCourseById(course.getId())).willReturn(Optional.of(course));
@@ -80,7 +80,7 @@ public class CourseServiceTests {
 	@DisplayName("Create Course with Missing Attribute")
 	public void givenCourseObjectWithMissingAttribute_whenSaveCourse_thenThrowException() {
 		// given
-		CourseDTO courseDTO = new CourseDTO(null, course.getCourseCode(), course.getName(), null, course.getType(),course.getStatus(),course.getCourseCapacity(),course.getNumberOfStudents(), course.getIsUndergrad(), course.getDepartmentId());
+		CourseDTO courseDTO = new CourseDTO(null, course.getCourseCode(), course.getName(), null, course.getType(),course.getStatus(),course.getCourseCapacity(),course.getNumberOfStudents(), course.getIsUndergrad(), "Computer Engineering");
 
 		// when/then
 		Assertions.assertThatThrownBy(() -> courseService.createCourse(courseDTO))

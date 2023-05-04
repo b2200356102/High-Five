@@ -7,10 +7,15 @@ import com.highfive.enrollmentservice.repository.CourseRepository;
 import com.highfive.enrollmentservice.service.CourseService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @Service
@@ -31,10 +36,30 @@ public class CourseServiceImpl implements CourseService {
 	@Override
 	public CourseDTO createCourse(CourseDTO courseDTO) {
 		Course course = modelMapper.map(courseDTO, Course.class);
+		RestTemplate restTemplate = new RestTemplate();
+		String url = "http://localhost:8082/api/departments/?departmentName="+courseDTO.getDepartmentName();
+		ResponseEntity<Map<String, Object>> response;
+		try {
+			response = restTemplate.exchange(
+					url,
+					HttpMethod.GET,
+					null,
+					new ParameterizedTypeReference<>() {
+					}
+			);
+		} catch (Exception e) {
+			throw new ResourceNotFoundException("Department", "department name", courseDTO.getDepartmentName(), "DEPARTMENT_NOT_FOUND");
+		}
+
+		Map<String, Object> departmentMap = response.getBody();
+		Long departmentId = ((Integer) departmentMap.get("id")).longValue();
+		course.setDepartmentId(departmentId);
+
 		Long theId = courseRepository.save(course).getId();
 		Course savedCourse = courseRepository.findCourseById(theId).orElseThrow(() -> new ResourceNotFoundException("Course", "id", String.valueOf(theId),COURSE_NOT_FOUND_ERROR_CODE));
-
-		return modelMapper.map(savedCourse, CourseDTO.class);
+		CourseDTO savedDto = modelMapper.map(savedCourse, CourseDTO.class);
+		savedDto.setDepartmentName(courseDTO.getDepartmentName());
+		return savedDto;
 	}
 
 	@Override
