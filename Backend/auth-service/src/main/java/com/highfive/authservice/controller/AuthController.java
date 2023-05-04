@@ -84,7 +84,8 @@ public class AuthController {
 		if (deparmentName == null)
 			return new ResponseEntity<>(departmentService.getDepartments(), HttpStatus.OK);
 		else
-			return new ResponseEntity<>(departmentService.getDepartmentByName(deparmentName), HttpStatus.OK);
+			return new ResponseEntity<>(departmentService.getDepartmentByName(deparmentName),
+					HttpStatus.OK);
 	}
 
 	@GetMapping("api/department_managers/")
@@ -93,24 +94,29 @@ public class AuthController {
 			throws DepartmentNotFoundException {
 
 		if (departmentId == null)
-			return new ResponseEntity<>(departmentManagerService.getDepartmentManagers(), HttpStatus.OK);
+			return new ResponseEntity<>(departmentManagerService.getDepartmentManagers(),
+					HttpStatus.OK);
 		else
-			return new ResponseEntity<>(departmentManagerService.getDepartmentManagerByDepartmentId(departmentId),
+			return new ResponseEntity<>(
+					departmentManagerService.getDepartmentManagerByDepartmentId(departmentId),
 					HttpStatus.OK);
 	}
 
 	@GetMapping("api/instructors/")
-	public ResponseEntity<Object> readInstructors(@RequestParam(name = "userId", required = false) String userId)
+	public ResponseEntity<Object> readInstructors(
+			@RequestParam(name = "userId", required = false) String userId)
 			throws UserNotFoundException, DepartmentNotFoundException {
 
 		if (userId == null)
 			return new ResponseEntity<>(instructorService.getInstructorDTOs(), HttpStatus.OK);
 		else
-			return new ResponseEntity<>(instructorService.getInstructorDTOById(userId), HttpStatus.OK);
+			return new ResponseEntity<>(instructorService.getInstructorDTOById(userId),
+					HttpStatus.OK);
 	}
 
 	@GetMapping("api/students/")
-	public ResponseEntity<Object> readStudents(@RequestParam(name = "userId", required = false) String userId)
+	public ResponseEntity<Object> readStudents(
+			@RequestParam(name = "userId", required = false) String userId)
 			throws UserNotFoundException, DepartmentNotFoundException {
 
 		if (userId == null)
@@ -120,7 +126,8 @@ public class AuthController {
 	}
 
 	@GetMapping("api/users/")
-	public ResponseEntity<Object> readUsers(@RequestParam(name = "userId", required = false) String userId)
+	public ResponseEntity<Object> readUsers(
+			@RequestParam(name = "userId", required = false) String userId)
 			throws UserNotFoundException, DepartmentNotFoundException {
 
 		if (userId == null)
@@ -130,8 +137,9 @@ public class AuthController {
 	}
 
 	@GetMapping("api/psw/")
-	public ResponseEntity<Boolean> checkPassword(@RequestParam(name = "userId") String userId,
-			@RequestParam(name = "password") String password) throws UserNotFoundException {
+	public ResponseEntity<Object> checkPassword(@RequestParam(name = "userId") String userId,
+			@RequestParam(name = "password") String password)
+			throws UserNotFoundException, DepartmentNotFoundException {
 		return new ResponseEntity<>(userService.checkPassword(userId, password), HttpStatus.OK);
 	}
 
@@ -142,8 +150,9 @@ public class AuthController {
 	}
 
 	@PutMapping("api/users/{role}/")
-	public ResponseEntity<String> updateUsers(@PathVariable(name = "role") String role, @RequestBody String request)
-			throws UserNotFoundException, DepartmentNotFoundException, JsonMappingException, JsonProcessingException {
+	public ResponseEntity<String> updateUsers(@PathVariable(name = "role") String role,
+			@RequestBody String request) throws UserNotFoundException, DepartmentNotFoundException,
+			JsonMappingException, JsonProcessingException {
 
 		ObjectMapper om = new ObjectMapper();
 
@@ -151,7 +160,8 @@ public class AuthController {
 		case "department_manager":
 			DepartmentManager dm = om.readValue(request, new TypeReference<DepartmentManager>() {
 			});
-			departmentManagerService.setDepartmentManager(dm.getDepartmentId(), dm.getInstructorId());
+			departmentManagerService.setDepartmentManager(dm.getDepartmentId(),
+					dm.getInstructorId());
 			break;
 		case "instructor":
 			InstructorDTO i = om.readValue(request, new TypeReference<InstructorDTO>() {
@@ -181,7 +191,8 @@ public class AuthController {
 	}
 
 	@DeleteMapping("api/departments/{departmentId}/")
-	public ResponseEntity<Object> deleteDepartment(@PathVariable(name = "departmentId") Integer departmentId)
+	public ResponseEntity<Object> deleteDepartment(
+			@PathVariable(name = "departmentId") Integer departmentId)
 			throws DepartmentNotFoundException {
 		departmentService.removeDepartment(departmentId);
 		return new ResponseEntity<>(HttpStatus.OK);

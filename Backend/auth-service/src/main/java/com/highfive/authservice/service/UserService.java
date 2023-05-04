@@ -56,8 +56,7 @@ public class UserService {
 	private EntityManager em;
 
 	@Transactional
-	public Object addUser(User user, Integer departmentId)
-			throws UserAlreadyExistsException {
+	public Object addUser(User user, Integer departmentId) throws UserAlreadyExistsException {
 
 		try {
 			User u = getUserById(user.getId());
@@ -71,8 +70,7 @@ public class UserService {
 				break;
 			case "department_manager":
 				instructorService.addInstructor(user, departmentId);
-				DepartmentManager dm = new DepartmentManager(null, user.getId(),
-						departmentId);
+				DepartmentManager dm = new DepartmentManager(null, user.getId(), departmentId);
 				departmentManagerService.addDepartmentManager(dm);
 				break;
 			case "instructor":
@@ -96,8 +94,8 @@ public class UserService {
 
 	public List<UserDTO> getUserDTOs() {
 		JPAQuery<UserDTO> query = new JPAQuery<>(em);
-		return query.select(new QUserDTO(user.id, user.name, user.mail, user.pending))
-				.from(user).fetch();
+		return query.select(new QUserDTO(user.id, user.name, user.mail, user.pending)).from(user)
+				.fetch();
 	}
 
 	public User getUserById(String id) throws UserNotFoundException {
@@ -171,16 +169,17 @@ public class UserService {
 			studentService.removeStudentById(id);
 			break;
 		default:
-			throw new IllegalArgumentException(
-					"Unexpected role for user: " + user.getRole());
+			throw new IllegalArgumentException("Unexpected role for user: " + user.getRole());
 		}
 		repository.deleteById(id);
 	}
 
-	public Boolean checkPassword(String id, String password)
-			throws UserNotFoundException {
+	public Object checkPassword(String id, String password)
+			throws UserNotFoundException, DepartmentNotFoundException {
 		User user = getUserById(id);
-		return PasswordManager.match(user.getPassword(), password);
+		if (PasswordManager.match(user.getPassword(), password))
+			return getUserDTOById(id);
+		return new User();
 	}
 
 }
