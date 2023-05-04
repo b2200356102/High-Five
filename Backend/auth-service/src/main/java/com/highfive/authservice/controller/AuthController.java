@@ -183,10 +183,14 @@ public class AuthController {
 	}
 
 	@PutMapping("api/psw/{userId}/")
-	public ResponseEntity<String> updatePassword(@PathVariable(name = "userId") String userId)
+	public ResponseEntity<String> updatePassword(@PathVariable(name = "userId") String userId,
+			@RequestParam(name = "password", required = false) String password)
 			throws UserNotFoundException {
 
-		userService.setUserPassword(userId);
+		if (password == null)
+			userService.resetUserPassword(userId);
+		else
+			userService.setPassword(userId, password);
 		return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
 	}
 
