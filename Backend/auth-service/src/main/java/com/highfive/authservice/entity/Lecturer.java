@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "INSTRUCTOR", schema = "AUTH")
-public class Instructor implements Serializable {
+public class Lecturer implements Serializable {
 
 	@Id
 	@Column(name = "USER_ID", nullable = false, length = 10)
@@ -25,11 +25,11 @@ public class Instructor implements Serializable {
 	@Column(name = "SCORE", nullable = false)
 	private Double score;
 
-	public Instructor() {
+	public Lecturer() {
 		super();
 	}
 
-	public Instructor(String userId, Integer departmentId, Double score) {
+	public Lecturer(String userId, Integer departmentId, Double score) {
 		super();
 		this.userId = userId;
 		this.departmentId = departmentId;
