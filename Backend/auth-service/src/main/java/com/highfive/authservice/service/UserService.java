@@ -135,7 +135,13 @@ public class UserService {
 		return repository.save(newUser);
 	}
 
-	public void setUserPassword(String id) throws UserNotFoundException {
+	public User setPassword(String id, String newPassword) throws UserNotFoundException {
+		User user = getUserById(id);
+		user.setPassword(PasswordManager.encode(newPassword));
+		return repository.save(user);
+	}
+
+	public void resetUserPassword(String id) throws UserNotFoundException {
 		User user = getUserById(id);
 		String newPassword = PasswordManager.generateNewPassword();
 		user.setPassword(newPassword);
