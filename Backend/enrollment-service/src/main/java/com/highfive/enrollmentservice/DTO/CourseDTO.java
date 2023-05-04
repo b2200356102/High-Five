@@ -49,6 +49,6 @@ public class CourseDTO {
 	private Boolean isUndergrad;
 
 	@NotNull(message = "Department ID should not be null")
-	@Min(value = 1, message = "Department ID should not be less than {value}")
-	private Long departmentId;
+	@Size(max = 60, message = "Department Name length should not exceed {max}")
+	private String departmentName;
 }
