@@ -18,7 +18,6 @@ const SignUp = (props) => {
       type: "text",
       label: "Name:",
       errorMessage: "Pleace fill this section.",
-      pattern: "^[A-Za-z]{1,50}$",
       required: true,
     },
     {
@@ -27,7 +26,6 @@ const SignUp = (props) => {
       type: "text",
       label: "Surname:",
       errorMessage: "Pleace fill this section.",
-      pattern: "^[A-Za-z]{1,50}$",
       required: true,
     },
     {
@@ -36,7 +34,6 @@ const SignUp = (props) => {
       type: "text",
       label: "ID:",
       errorMessage: "Pleace fill this section.",
-      pattern: "^[0-9]{1,20}$",
       required: true,
     },
     {

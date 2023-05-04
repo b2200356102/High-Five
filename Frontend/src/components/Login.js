@@ -16,7 +16,6 @@ const Login = (props) => {
       type: "text",
       label: "User ID:",
       errorMessage: "Pleace fill this section.",
-      pattern: "^[0-9]{1,20}$",
       required: true,
     },
     {
@@ -37,6 +36,20 @@ const Login = (props) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
+  const handleLogin = () => {
+    const input_id = values.id;   
+    const input_pwd = values.pwd; 
+    const url='http://localhost:8082/api/psw/?userId='+input_id+'&password='+input_pwd;
+    console.log(url);
+    fetch(url, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json'},
+    })
+    .then(response => response.json()).then(a => {
+      console.log(a);
+    })
+  };
+
   return (
     <div className="login">
       <header>
@@ -54,7 +67,7 @@ const Login = (props) => {
         ))}
       </form>
       <button className="reset-pwd-button">Reset Password</button>
-      <button className="submit-button">LOGIN</button>
+      <button className="submit-button" onClick={handleLogin}>LOGIN</button>
     </div>
   );
 }
