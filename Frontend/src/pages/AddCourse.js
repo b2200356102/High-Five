@@ -39,6 +39,8 @@ function AddCourse() {
         setEducation(e.target.value);
     };
 
+    const [errorMessage, setErrorMessage] = useState(null);
+
     const history = useHistory();
     const handleButtonClick = () => {
 
@@ -58,12 +60,21 @@ function AddCourse() {
           headers: { 'Accept': 'application/json','Content-Type': 'application/json','Transfer-Encoding': 'chunked'},
           body: JSON.stringify(data)
         })
-        .then(response => response.json()).then(() => {
-            console.log('Course created successfully');
-            history.push('/courses');
+        .then(response => response.json()).then((response) => {
+            if(response.status !== 201){
+                
+                setErrorMessage(response.message);
+                console.log(response);
+            }else{
+                console.log('Course created successfully');
+                history.push('/courses');
+                console.log(response);
+            }
+            
         })
         .catch(error => {
             console.error('Error creating course:', error);
+            setErrorMessage(error.message);
         });
     
     };
@@ -149,6 +160,11 @@ function AddCourse() {
                 </div>
             </div>
 
+
+            <div>
+                {errorMessage && <p>{errorMessage}</p>}
+                {/* rest of your component code */}
+            </div>
             
 
             <div className="buttonContainer">
