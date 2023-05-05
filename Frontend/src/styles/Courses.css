@@ -27,6 +27,21 @@
     margin-bottom: 5%;
 }
 
+.userblock {
+    background-color: #C3ACD0;
+    /* Set the background color of the rectangle */
+    padding: 1rem;
+    /* Add padding for content inside the rectangle */
+    
+    /* Set the width of the rectangle */
+    text-align: start;
+    /* Center text inside the rectangle */
+    border-radius: 20px;
+    height: fit-content;
+    margin-bottom: 3%;
+    margin-top: 3%;
+}
+
 .insideBlock{
     background-color: #F7EFE5;
     padding: 1rem;
