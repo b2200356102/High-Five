@@ -28,6 +28,11 @@ public class User implements Serializable {
 	@Length(max = 50, message = "USER NAME MUST BE LESS THAN 50 CHARACTERS")
 	private String name;
 
+	@Column(name = "SURNAME", nullable = false, length = 50)
+	@NotNull(message = "USER NAME CANNOT BE NULL")
+	@Length(max = 50, message = "USER NAME MUST BE LESS THAN 50 CHARACTERS")
+	private String surname;
+
 	@Column(name = "MAIL", nullable = false, length = 50)
 	@Email(message = "INVALID MAIL ADDRESS")
 	private String mail;
@@ -46,11 +51,12 @@ public class User implements Serializable {
 		super();
 	}
 
-	public User(String id, String name, String mail, String password, String role,
+	public User(String id, String name, String surname, String mail, String password, String role,
 			Boolean pending) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.surname = surname;
 		this.mail = mail;
 		this.password = password;
 		this.role = role;
@@ -71,6 +77,14 @@ public class User implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getSurname() {
+		return surname;
+	}
+
+	public void setSurname(String surname) {
+		this.surname = surname;
 	}
 
 	public String getMail() {
@@ -106,6 +120,6 @@ public class User implements Serializable {
 	}
 
 	public UserDTO toUserDTO() {
-		return new UserDTO(id, name, mail, pending);
+		return new UserDTO(id, name, surname, mail, pending, role);
 	}
 }

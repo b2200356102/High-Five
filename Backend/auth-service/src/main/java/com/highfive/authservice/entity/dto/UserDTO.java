@@ -6,16 +6,26 @@ public class UserDTO {
 
 	private String id;
 	private String name;
+	private String surname;
 	private String mail;
 	private Boolean pending;
+	private String role;
 
 	@QueryProjection
-	public UserDTO(String id, String name, String mail, Boolean pending) {
+	public UserDTO() {
+		super();
+	}
+
+	@QueryProjection
+	public UserDTO(String id, String name, String surname, String mail, Boolean pending,
+			String role) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.surname = surname;
 		this.mail = mail;
 		this.pending = pending;
+		this.role = role;
 	}
 
 	public String getId() {
@@ -34,6 +44,14 @@ public class UserDTO {
 		this.name = name;
 	}
 
+	public String getSurname() {
+		return surname;
+	}
+
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
+
 	public String getMail() {
 		return mail;
 	}
@@ -48,6 +66,14 @@ public class UserDTO {
 
 	public void setPending(Boolean pending) {
 		this.pending = pending;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 }

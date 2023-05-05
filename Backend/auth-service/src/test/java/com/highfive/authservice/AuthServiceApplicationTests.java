@@ -70,8 +70,7 @@ class AuthServiceApplicationTests {
 	@Test
 	public void addStudent() throws Exception {
 		String uri = "/api/users/1/";
-		User user = new User("2210356135", "Ataberk ASAR", "aasar", "12345", "student",
-				true);
+		User user = new User("2210356135", "Ataberk", "ASAR", "aasar", "12345", "student", true);
 		String request = mapToJson(user);
 
 		MvcResult mvcResult = mvc
