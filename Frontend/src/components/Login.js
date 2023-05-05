@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect  } from "react";
 import FormInput from "./FormInput";
+import App from "../App";
 
 const Login = (props) => {
   const [values, setValues] = useState({
@@ -28,6 +29,9 @@ const Login = (props) => {
     },
   ];
 
+  const [faultyLogin, setFaultyLogin] = useState(false);
+  const [username, setUsername] = useState("");
+
   const handleSubmit = (e) => {
     e.preventDefault();
   };
@@ -36,18 +40,36 @@ const Login = (props) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
+  const submitLogin = (e) => {
+    if(e.userDTO.name != null){
+      setUsername(e.userDTO.name);
+      setFaultyLogin(false);
+      console.log(username);
+      // home
+    }
+    else{
+      setFaultyLogin(true);
+    }
+  };
+
+  const controlLogin = (e) => {
+    if(e != null){
+      setFaultyLogin(true);
+    }
+  };
+
   const handleLogin = () => {
     const input_id = values.id;   
     const input_pwd = values.pwd; 
     const url='http://localhost:8082/api/psw/?userId='+input_id+'&password='+input_pwd;
-    console.log(url);
+    
     fetch(url, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json'},
     })
-    .then(response => response.json()).then(a => {
-      console.log(a);
-    })
+    .then(response => response.json())
+    .then(data => submitLogin(data))
+    .catch(error => controlLogin(error))
   };
 
   return (
@@ -68,6 +90,7 @@ const Login = (props) => {
       </form>
       <button className="reset-pwd-button">Reset Password</button>
       <button className="submit-button" onClick={handleLogin}>LOGIN</button>
+      {faultyLogin && (<p class="faulty-login-text">Incorrect ID or password. Try again.</p>)}
     </div>
   );
 }
