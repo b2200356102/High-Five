@@ -120,6 +120,6 @@ public class User implements Serializable {
 	}
 
 	public UserDTO toUserDTO() {
-		return new UserDTO(id, surname, name, mail, pending);
+		return new UserDTO(id, name, surname, mail, pending, role);
 	}
 }

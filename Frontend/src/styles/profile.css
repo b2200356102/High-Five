@@ -286,3 +286,8 @@
     width: 100%;
     margin-top: 10px;
   }
+  .successtext{
+    font-size: 14px;
+    color: green;
+    padding: 5px;
+  }

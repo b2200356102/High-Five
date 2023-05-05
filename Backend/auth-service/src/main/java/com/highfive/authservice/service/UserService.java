@@ -94,7 +94,8 @@ public class UserService {
 
 	public List<UserDTO> getUserDTOs() {
 		JPAQuery<UserDTO> query = new JPAQuery<>(em);
-		return query.select(new QUserDTO(user.id, user.name, user.surname, user.mail, user.pending))
+		return query.select(
+				new QUserDTO(user.id, user.name, user.surname, user.mail, user.pending, user.role))
 				.from(user).fetch();
 	}
 
@@ -117,9 +118,8 @@ public class UserService {
 			return studentService.getStudentDTOById(id);
 		default:
 			JPAQuery<UserDTO> query = new JPAQuery<>(em);
-			return query
-					.select(new QUserDTO(user.id, user.name, user.surname, user.mail, user.pending))
-					.from(user).where(user.id.eq(id)).fetchFirst();
+			return query.select(new QUserDTO(user.id, user.name, user.surname, user.mail,
+					user.pending, user.role)).from(user).where(user.id.eq(id)).fetchFirst();
 		}
 	}
 
@@ -188,7 +188,7 @@ public class UserService {
 		User user = getUserById(id);
 		if (PasswordManager.match(user.getPassword(), password))
 			return getUserDTOById(id);
-		return new User();
+		throw new UserNotFoundException();
 	}
 
 }
