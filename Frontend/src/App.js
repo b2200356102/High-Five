@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Home from './pages/Home';
 import Log from './pages/Log';
 import Courses from './pages/Courses';
+import Users from './pages/Users';
 
 function App() {
   return (
@@ -32,6 +33,9 @@ function App() {
           </Route>
           <Route path="/courses" component={Courses} exact>
             <Courses />
+          </Route>
+          <Route path="/users" component={Users} exact>
+            <Users />
           </Route>
         </Switch>
       </Router>
