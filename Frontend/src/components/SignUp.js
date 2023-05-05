@@ -44,6 +44,8 @@ const SignUp = (props) => {
     },
   ];
 
+  const [validSignUp, setValidSignUp] = useState(false);
+
   const handleSubmit = (e) => {
     e.preventDefault();
   };
@@ -77,6 +79,7 @@ const SignUp = (props) => {
         </div>
       </form>
       <button className="submit-button">SIGN UP</button>
+      {validSignUp && (<p class="faulty-login-text">Registiration request is sent.</p>)}
     </div>
   );
 };

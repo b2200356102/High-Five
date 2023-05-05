@@ -4,8 +4,9 @@ import { Link } from "react-router-dom"
 import { FaBars } from "react-icons/fa"
 import { ImCross } from "react-icons/im"
 
-const NavBar = () => {
+const NavBar = ({ username }) => {
   const [Mobile, setMobile] = useState(false)
+
   return (
     <>
       <nav class='NavBar'>
@@ -13,7 +14,7 @@ const NavBar = () => {
       <div class="row">
           <div class="column">SEMESTER 2023 - SPRING</div>
           <div class="column"><Link to='/profile' class='profile'>
-            <li class="profiletext"> User Name</li>
+            <li class="profiletext"> {username} </li>
           </Link></div>
       </div>
 
@@ -37,7 +38,7 @@ const NavBar = () => {
           <Link to='/addinstructor' class='addinstructor'>
             <li>AddInstructor</li>
           </Link>
-          <Link to='/log' class='sena-app'>
+          <Link to='/log' class='log'>
             <li>Log</li>
           </Link>
           
