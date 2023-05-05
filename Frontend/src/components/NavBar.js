@@ -15,7 +15,7 @@ const NavBar = () => {
       <div class="row">
           <div class="column">SEMESTER 2023 - SPRING</div>
           <div class="column"><Link to='/profile' class='profile'>
-            <li class="profiletext"> {username} </li>
+            <li class="profiletext"> PROFILE </li>
           </Link></div>
       </div>
 
@@ -42,7 +42,6 @@ const NavBar = () => {
           <Link to='/log' class='log'>
             <li>Log</li>
           </Link>
-          
         </ul>
         {/* 
         whenever we click on button = setMobile(!Mobile) ==  is mobile oppsite to setMobile 

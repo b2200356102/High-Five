@@ -44,7 +44,9 @@ const Login = (props) => {
   const submitLogin = (e) => {
     if(e.userDTO.name != null){
       setFaultyLogin(false);
-      localStorage.setItem('userid', e.userDTO.id,'username', e.userDTO.name);
+      localStorage.setItem('userid', e.userDTO.id);
+      localStorage.setItem('username', e.userDTO.name);
+      localStorage.setItem('usersurname', e.userDTO.surname);
       history.push('/home');
     }
     else{
