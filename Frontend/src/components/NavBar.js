@@ -28,8 +28,8 @@ const NavBar = () => {
           <Link to='/home' class='home'>
             <li>Home</li>
           </Link>
-          <Link to='/addcourse' class='addcourse'>
-            <li>AddCourse</li>
+          <Link to='/courses' class='courses'>
+            <li>Courses</li>
           </Link>
           <Link to='/addinstructor' class='addinstructor'>
             <li>AddInstructor</li>

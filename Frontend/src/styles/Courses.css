@@ -1,0 +1,47 @@
+.coursesBlock{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    margin: 5%;
+
+}
+
+.courseInfo p,
+.courseInfo strong{
+    color: #674188;
+}
+
+
+.block {
+    background-color: #C3ACD0;
+    /* Set the background color of the rectangle */
+    padding: 1rem;
+    /* Add padding for content inside the rectangle */
+    
+    /* Set the width of the rectangle */
+    text-align: start;
+    /* Center text inside the rectangle */
+    border-radius: 20px;
+    height: fit-content;
+    margin-bottom: 5%;
+}
+
+.insideBlock{
+    background-color: #F7EFE5;
+    padding: 1rem;
+    border-radius: 20px;
+}
+
+.coursesButton {
+    /* Add your button styles here */
+    background-color: #674188;
+    border: none;
+    border-radius: 100px;
+    color: #FFFBF5;
+    display: flow-root;
+    font-size: x-large;
+    width: 12%;
+    margin-top: 20px;
+    margin-left: 20px;
+}
