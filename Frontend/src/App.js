@@ -6,6 +6,7 @@ import Profile from './pages/Profile';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Home from './pages/Home';
 import Log from './pages/Log';
+import Courses from './pages/Courses';
 
 function App() {
   return (
@@ -28,6 +29,9 @@ function App() {
           </Route>
           <Route path="/log" component={Log} exact>
             <Log />
+          </Route>
+          <Route path="/courses" component={Courses} exact>
+            <Courses />
           </Route>
         </Switch>
       </Router>

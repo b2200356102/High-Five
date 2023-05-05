@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../styles/AddCourse.css";
+import { useHistory } from 'react-router-dom';
 
 function AddCourse() {
     const [courseCode, setCourseId] = useState("");
@@ -38,7 +39,7 @@ function AddCourse() {
         setEducation(e.target.value);
     };
 
-
+    const history = useHistory();
     const handleButtonClick = () => {
 
         
@@ -57,21 +58,21 @@ function AddCourse() {
           headers: { 'Accept': 'application/json','Content-Type': 'application/json','Transfer-Encoding': 'chunked'},
           body: JSON.stringify(data)
         })
-        .then(response => response.json()).then(a => {
-            console.log(a);
+        .then(response => response.json()).then(() => {
+            console.log('Course created successfully');
+            history.push('/courses');
         })
-        
-
-        /*console.log("Course ID - Course Name: ", courseCode, " - ", name);
-        console.log("Department: ", departmentName);
-        console.log("Credit: ", credit);
-        console.log("Capacity: ", courseCapacity);
-        console.log("Course Type: ", type);
-        console.log("Education: ", isUndergrad);*/
+        .catch(error => {
+            console.error('Error creating course:', error);
+        });
+    
     };
+
+    
 
     return (
         <div className="pageContainer"> {/* Parent container */}
+
             <div className="rectangle"> {/* Rectangle in the middle */}
                 {/* Content inside the rectangle */}
                 <div className='slotrectangle'>
