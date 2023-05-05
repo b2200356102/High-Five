@@ -14,11 +14,12 @@ function Profile() {
   const [passwordLength, setPasswordLength] = useState(true);
   const [success, setSuccess] = useState(false);
   const [newProfilePic, setNewProfilePic] = useState(null);
+  const userID = localStorage.getItem('userid');
 
   useEffect(() => {
     async function fetchData() {
       const response = await fetch(
-        `http://localhost:8082/api/users/?userId=${1234567893}`
+        `http://localhost:8082/api/users/?userId=${userID}`
       );
       const data = await response.json();
 

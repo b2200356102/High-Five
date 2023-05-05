@@ -1,4 +1,5 @@
 import { useState, useEffect  } from "react";
+import { useHistory } from 'react-router-dom';
 import FormInput from "./FormInput";
 import App from "../App";
 
@@ -30,7 +31,7 @@ const Login = (props) => {
   ];
 
   const [faultyLogin, setFaultyLogin] = useState(false);
-  const [username, setUsername] = useState("");
+  const history = useHistory();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -42,10 +43,9 @@ const Login = (props) => {
 
   const submitLogin = (e) => {
     if(e.userDTO.name != null){
-      setUsername(e.userDTO.name);
       setFaultyLogin(false);
-      console.log(username);
-      // home
+      localStorage.setItem('userid', e.userDTO.id,'username', e.userDTO.name);
+      history.push('/home');
     }
     else{
       setFaultyLogin(true);

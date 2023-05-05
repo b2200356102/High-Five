@@ -4,8 +4,9 @@ import { Link } from "react-router-dom"
 import { FaBars } from "react-icons/fa"
 import { ImCross } from "react-icons/im"
 
-const NavBar = ({ username }) => {
+const NavBar = () => {
   const [Mobile, setMobile] = useState(false)
+  const username = localStorage.getItem('username');
 
   return (
     <>
