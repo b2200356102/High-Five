@@ -6,8 +6,6 @@ import javax.inject.Inject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.highfive.authservice.entity.DepartmentManager;
@@ -21,6 +19,13 @@ import com.highfive.authservice.utils.exception.DepartmentNotFoundException;
 import com.highfive.authservice.utils.exception.UserAlreadyExistsException;
 import com.highfive.authservice.utils.exception.UserNotFoundException;
 import com.querydsl.jpa.impl.JPAQuery;
+import com.sendgrid.Method;
+import com.sendgrid.Request;
+import com.sendgrid.Response;
+import com.sendgrid.SendGrid;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -49,11 +54,11 @@ public class UserService {
 	@Lazy
 	private StudentService studentService;
 
-	@Autowired
-	private JavaMailSender mailSender;
-
 	@PersistenceContext
 	private EntityManager em;
+
+	@Autowired
+	SendGrid sendGrid;
 
 	@Transactional
 	public Object addUser(User user, Integer departmentId) throws UserAlreadyExistsException {
@@ -97,6 +102,13 @@ public class UserService {
 		return query.select(
 				new QUserDTO(user.id, user.name, user.surname, user.mail, user.pending, user.role))
 				.from(user).fetch();
+	}
+
+	public List<UserDTO> getPendingUsers() {
+		JPAQuery<UserDTO> query = new JPAQuery<>(em);
+		return query.select(
+				new QUserDTO(user.id, user.name, user.surname, user.mail, user.pending, user.role))
+				.from(user).where(user.pending).fetch();
 	}
 
 	public User getUserById(String id) throws UserNotFoundException {
@@ -150,12 +162,31 @@ public class UserService {
 		user.setPassword(newPassword);
 		repository.save(user);
 
-		SimpleMailMessage msg = new SimpleMailMessage();
-		msg.setFrom("test@gmail.com");
-		msg.setTo(user.getMail());
-		msg.setText("Your password has been changed to:\n" + newPassword);
-		msg.setSubject("Your password has been changed");
-		mailSender.send(msg);
+		String htmlValue = "<div style=\"font-family: inherit; text-align: inherit\">Your password has been changed successfully!</div>\n"
+				+ "<div style=\"font-family: inherit; text-align: inherit; margin-left: 0px\"><span style=\"box-sizing: border-box; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; font-style: inherit; font-variant-ligatures: inherit; font-variant-caps: inherit; font-variant-numeric: inherit; font-variant-east-asian: inherit; font-variant-alternates: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; font-optical-sizing: inherit; font-kerning: inherit; font-feature-settings: inherit; font-variation-settings: inherit; font-size: 14px; vertical-align: baseline; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-top-style: initial; border-right-style: initial; border-bottom-style: initial; border-left-style: initial; border-top-color: initial; border-right-color: initial; border-bottom-color: initial; border-left-color: initial; border-image-source: initial; border-image-slice: initial; border-image-width: initial; border-image-outset: initial; border-image-repeat: initial; color: #000000; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: pre-wrap; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial\">If this wasn't you, your account has been compromised. Please contact to your supervisor.</span>&nbsp;</div>\n"
+				+ "<div style=\"font-family: inherit; text-align: inherit\"><br></div>\n"
+				+ "<div style=\"font-family: inherit; text-align: inherit\">Your new password is:</div>"
+				+ "<div style=\"font-family: inherit; text-align: inherit\"><span style=\"color: #000000; font-family: arial, helvetica, sans-serif; font-size: 32px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: pre-wrap; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline\">"
+				+ newPassword + "</span>&nbsp;</div>";
+
+		Email from = new Email("infofivehigh@gmail.com");
+		Email to = new Email(user.getMail());
+		String subject = "Your password has changed!";
+		Content content = new Content("text/html", htmlValue);
+
+		Mail mail = new Mail(from, subject, to, content);
+
+		Request request = new Request();
+
+		try {
+			request.setMethod(Method.POST);
+			request.setEndpoint("mail/send");
+			request.setBody(mail.build());
+			Response response = sendGrid.api(request);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
 	}
 
 	@Transactional

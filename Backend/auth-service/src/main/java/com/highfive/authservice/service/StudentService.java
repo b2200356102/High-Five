@@ -46,8 +46,7 @@ public class StudentService {
 	private EntityManager em;
 
 	public Student addStudent(User user, Integer departmentId) {
-		Student newStudent = new Student(user.getId(), departmentId, (short) 1, true,
-				false);
+		Student newStudent = new Student(user.getId(), departmentId, (short) 1, true, false);
 		return repository.save(newStudent);
 	}
 
@@ -60,10 +59,32 @@ public class StudentService {
 		JPAQuery<StudentDTO> query = new JPAQuery<>(em);
 
 		return query
-				.select(new QStudentDTO(user, department, student.semester,
-						student.undergrad, student.banned))
-				.from(student).innerJoin(user).on(student.userId.eq(user.id))
-				.innerJoin(department).on(student.departmentId.eq(department.id)).fetch();
+				.select(new QStudentDTO(user, department, student.semester, student.undergrad,
+						student.banned))
+				.from(student).innerJoin(user).on(student.userId.eq(user.id)).innerJoin(department)
+				.on(student.departmentId.eq(department.id)).fetch();
+	}
+
+	public List<StudentDTO> getBannedStudentDTOs() {
+
+		JPAQuery<StudentDTO> query = new JPAQuery<>(em);
+
+		return query
+				.select(new QStudentDTO(user, department, student.semester, student.undergrad,
+						student.banned))
+				.from(student).innerJoin(user).on(student.userId.eq(user.id)).innerJoin(department)
+				.on(student.departmentId.eq(department.id)).where(student.banned).fetch();
+	}
+
+	public List<StudentDTO> getUnBannedStudentDTOs() {
+
+		JPAQuery<StudentDTO> query = new JPAQuery<>(em);
+
+		return query
+				.select(new QStudentDTO(user, department, student.semester, student.undergrad,
+						student.banned))
+				.from(student).innerJoin(user).on(student.userId.eq(user.id)).innerJoin(department)
+				.on(student.departmentId.eq(department.id)).where(student.banned.isFalse()).fetch();
 	}
 
 	public Student getStudentById(String userId) throws UserNotFoundException {
@@ -80,17 +101,15 @@ public class StudentService {
 
 		User user = userService.getUserById(userId);
 		Student student = getStudentById(userId);
-		Department department = departmentService
-				.getDepartmentById(student.getDepartmentId());
+		Department department = departmentService.getDepartmentById(student.getDepartmentId());
 
-		return new StudentDTO(user, department, student.getSemester(),
-				student.getUndergrad(), student.getBanned());
+		return new StudentDTO(user, department, student.getSemester(), student.getUndergrad(),
+				student.getBanned());
 	}
 
 	@Transactional
 	public Student setStudent(StudentDTO studentDTO) throws UserNotFoundException {
-		Student newStudent = repository.findById(studentDTO.getUserDTO().getId())
-				.orElse(null);
+		Student newStudent = repository.findById(studentDTO.getUserDTO().getId()).orElse(null);
 		if (newStudent == null)
 			throw new UserNotFoundException();
 

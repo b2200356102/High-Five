@@ -78,14 +78,17 @@ public class AuthController {
 
 	@GetMapping("api/departments/")
 	public ResponseEntity<Object> readDepartments(
-			@RequestParam(name = "departmentName", required = false) String deparmentName)
+			@RequestParam(name = "departmentId", required = false) Object departmentId)
 			throws DepartmentNotFoundException {
 
-		if (deparmentName == null)
+		if (departmentId == null)
 			return new ResponseEntity<>(departmentService.getDepartments(), HttpStatus.OK);
-		else
-			return new ResponseEntity<>(departmentService.getDepartmentByName(deparmentName),
+		if (departmentId instanceof Integer)
+			return new ResponseEntity<>(departmentService.getDepartmentById((Integer) departmentId),
 					HttpStatus.OK);
+		else
+			return new ResponseEntity<>(
+					departmentService.getDepartmentByName((String) departmentId), HttpStatus.OK);
 	}
 
 	@GetMapping("api/department_managers/")
@@ -125,6 +128,20 @@ public class AuthController {
 			return new ResponseEntity<>(studentService.getStudentDTOById(userId), HttpStatus.OK);
 	}
 
+	@GetMapping("api/students/banned/")
+	public ResponseEntity<Object> readBannedStudents()
+			throws UserNotFoundException, DepartmentNotFoundException {
+
+		return new ResponseEntity<>(studentService.getBannedStudentDTOs(), HttpStatus.OK);
+	}
+
+	@GetMapping("api/students/unbanned/")
+	public ResponseEntity<Object> readUnbannedStudents()
+			throws UserNotFoundException, DepartmentNotFoundException {
+
+		return new ResponseEntity<>(studentService.getUnBannedStudentDTOs(), HttpStatus.OK);
+	}
+
 	@GetMapping("api/users/")
 	public ResponseEntity<Object> readUsers(
 			@RequestParam(name = "userId", required = false) String userId)
@@ -134,6 +151,12 @@ public class AuthController {
 			return new ResponseEntity<>(userService.getUserDTOs(), HttpStatus.OK);
 		else
 			return new ResponseEntity<>(userService.getUserDTOById(userId), HttpStatus.OK);
+	}
+
+	@GetMapping("api/users/pending/")
+	public ResponseEntity<Object> readPendingUsers() {
+
+		return new ResponseEntity<>(userService.getPendingUsers(), HttpStatus.OK);
 	}
 
 	@GetMapping("api/psw/")
